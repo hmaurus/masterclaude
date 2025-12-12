@@ -71,6 +71,10 @@ PRD.md → Grupos → Tarefas → Issue → Implementar → Commit → PR → Me
 ```
 pdir-workflow-plugin/
 ├── .claude-plugin/plugin.json
+├── .templates/
+│   ├── PRD-template.md
+│   ├── lista-grupos-template.md
+│   └── lista-tarefas-template.md
 ├── commands/
 │   ├── pdir-criar-prd.md
 │   └── pdir/
