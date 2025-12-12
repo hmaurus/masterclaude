@@ -1,0 +1,12 @@
+{
+  "name": "pdir-workflow",
+  "version": "1.0.0",
+  "description": "Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA",
+  "author": {
+    "name": "Maurus Henriques",
+    "email": "maurus@maurus.com.br"
+  },
+  "repository": "https://github.com/hmaurus/pdir-workflow-plugin",
+  "license": "MIT",
+  "keywords": ["pdir", "workflow", "development", "ai-assisted", "task-management", "github-issues"]
+}
