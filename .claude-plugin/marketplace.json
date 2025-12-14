@@ -1,0 +1,18 @@
+{
+  "name": "masterclaude",
+  "owner": {
+    "name": "Maurus Henriques",
+    "email": "maurus@maurus.com.br",
+    "url": "https://github.com/hmaurus"
+  },
+  "homepage": "https://github.com/hmaurus/masterclaude",
+  "repository": "https://github.com/hmaurus/masterclaude",
+  "plugins": [
+    {
+      "name": "pdir-workflow",
+      "source": "./plugins/pdir-workflow",
+      "description": "Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA",
+      "version": "1.0.0"
+    }
+  ]
+}
