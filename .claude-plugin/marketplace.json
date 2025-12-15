@@ -1,5 +1,8 @@
 {
   "name": "masterclaude",
+  "metadata": {
+    "version": "1.0.1"
+  },
   "owner": {
     "name": "Maurus Henriques",
     "email": "maurus@maurus.com.br",

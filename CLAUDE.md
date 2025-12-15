@@ -5,17 +5,24 @@ Marketplace de plugins para Claude Code.
 ## Versionamento
 
 - **Semver**: MAJOR.MINOR.PATCH
-- **Fonte da verdade**: `plugins/<plugin>/.claude-plugin/plugin.json`
 - **Quando incrementar**:
   - PATCH (0.0.X): correções de bugs
   - MINOR (0.X.0): novas funcionalidades compatíveis
   - MAJOR (X.0.0): mudanças incompatíveis
 
+### Arquivos a atualizar
+
+| Arquivo | Quando |
+|---------|--------|
+| `plugins/<plugin>/.claude-plugin/plugin.json` | Sempre que alterar o plugin |
+| `.claude-plugin/marketplace.json` (`metadata.version`) | Sempre que publicar alterações |
+
 ## Workflow de Desenvolvimento
 
 1. Fazer alterações no plugin
-2. Atualizar versão em `plugins/<plugin>/.claude-plugin/plugin.json`
-3. Commit e push
+2. Atualizar versão do plugin em `plugins/<plugin>/.claude-plugin/plugin.json`
+3. Atualizar versão do marketplace em `.claude-plugin/marketplace.json`
+4. Commit e push
 
 ## Comandos em Plugins
 
