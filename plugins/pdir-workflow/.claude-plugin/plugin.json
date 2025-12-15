@@ -1,6 +1,6 @@
 {
   "name": "pdir-workflow",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA",
   "author": {
     "name": "Maurus Henriques",

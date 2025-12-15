@@ -11,15 +11,13 @@ Sincroniza, commita e envia mudanças para origin.
 ### 1. Sincronizar e Verificar
 
 Informações da branch:
-- Branch atual: !`git branch --show-current`
-- Status: !`git status --short`
-- Diff: !`git diff --stat`
+!`git status -sb`
+!`git diff --stat`
 
-Verificar upstream (pode falhar se branch nova):
-!`git rev-parse --abbrev-ref @{u}`
+**Interpretar saída do `git status -sb`:**
+- `## main...origin/main` → tem upstream, execute `git pull --ff-only`
+- `## main` (sem `...`) → branch nova, pule o pull
 
-**Se o comando upstream retornou resultado:** execute `git pull --ff-only`
-**Se o comando upstream falhou (branch nova):** pule o pull
 **Se não houver mudanças:** Informar e encerrar.
 
 ### 2. Criar Commit
