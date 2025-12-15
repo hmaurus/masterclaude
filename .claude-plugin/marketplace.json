@@ -11,8 +11,7 @@
     {
       "name": "pdir-workflow",
       "source": "./plugins/pdir-workflow",
-      "description": "Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA",
-      "version": "1.0.0"
+      "description": "Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA"
     }
   ]
 }
