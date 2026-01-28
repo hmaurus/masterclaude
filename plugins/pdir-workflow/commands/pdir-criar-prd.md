@@ -110,3 +110,5 @@ Próximos passos:
 1. Revisar o PRD gerado
 2. /pdir-listar-grupos PRD.md
 ```
+
+**Dica:** Para refinamento colaborativo do PRD, considere usar `/doc-coauthoring` ou outras skills de documentação disponíveis.

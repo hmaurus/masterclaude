@@ -13,6 +13,14 @@ Marca Pull Request como pronto para revisão (remove status Draft).
 
 Se não fornecido, marca PR da branch atual.
 
+## Pré-Review (Opcional)
+
+Antes de marcar como pronto, considere executar uma revisão automatizada com skills disponíveis:
+
+- `/code-review` - Revisão de código do PR
+- `/pr-review-toolkit:review-pr` - Revisão abrangente com agentes especializados
+- Outras skills de revisão de código que você tenha instalado
+
 ## Instruções
 
 ```bash

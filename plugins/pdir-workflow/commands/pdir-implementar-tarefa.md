@@ -25,6 +25,11 @@ gh issue view $ARGUMENTS --json number,title,body
 
 Entender contexto e código existente relacionado à tarefa.
 
+**Skills opcionais para desenvolvimento guiado (se disponíveis):**
+- `/feature-dev` - Desenvolvimento estruturado com foco em arquitetura
+- `/frontend-design` - Para tarefas envolvendo interface/UI
+- Outras skills de desenvolvimento que você tenha instalado
+
 ### 3. Criar Branch
 
 ```bash
@@ -46,6 +51,8 @@ git checkout -b [tipo]/[número]-[slug]
 - [ ] Linting passou (`pnpm lint`)
 - [ ] Funcionalidade testada
 - [ ] Código segue padrões do projeto
+
+**Dica:** Se disponível, use `/webapp-testing` para testes automatizados de interface, ou outras skills de teste que você tenha.
 
 ### 6. Documentar na Issue
 
