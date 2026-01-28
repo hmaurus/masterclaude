@@ -28,20 +28,18 @@ Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estr
 
 | Comando | Descrição |
 |---------|-----------|
-| `/pdir-criar-prd` | descrição → PRD.md |
-| `/pdir-listar-grupos` | PRD → grupos/subgrupos |
-| `/pdir-listar-tarefas` | grupo → lista de tarefas |
+| `/pdir-criar-prd` | descrição → PRD.md (com fases) |
+| `/pdir-dividir-em-tarefas` | plano/fase → lista de tarefas |
 | `/pdir-criar-issue` | tarefa → Issue GitHub |
 | `/pdir-implementar-tarefa` | Issue → branch + código |
 | `/pdir-commit` | commit + push |
-| `/pdir-draft-pr` | cria Draft PR |
-| `/pdir-ready-pr` | marca PR pronto |
-| `/pdir-merge-tarefa` | merge + limpeza |
+| `/pdir-criar-pr` | cria Draft PR |
+| `/pdir-merge-tarefa` | review + merge + limpeza |
 
 #### Fluxo
 
 ```
-PRD.md → Grupos → Tarefas → Issue → Implementar → Commit → PR → Merge
+PRD.md → Tarefas (por fase) → Issue → Implementar → Commit → PR → Merge
 ```
 
 ## Estrutura

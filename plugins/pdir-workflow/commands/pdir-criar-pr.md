@@ -1,10 +1,10 @@
 ---
-description: Cria Draft Pull Request (commits já devem estar feitos)
+description: Cria Pull Request para a branch atual
 ---
 
-# PDIR: Criar Draft PR
+# PDIR: Criar PR
 
-Cria Draft Pull Request para a branch atual.
+Cria Pull Request para a branch atual.
 
 **Pré-requisitos:**
 - Estar em branch de feature (não main)
@@ -28,10 +28,10 @@ git status
 git push -u origin "$(git branch --show-current)"
 ```
 
-### 3. Criar Draft Pull Request
+### 3. Criar Pull Request
 
 ```bash
-gh pr create --draft \
+gh pr create \
   --title "tipo(escopo): descrição" \
   --body "$(cat <<'EOF'
 Closes #[número-da-issue]
@@ -59,15 +59,14 @@ EOF
 
 Informar ao usuário:
 ```
-Draft PR criado!
+PR criado!
 
 Branch: [nome-da-branch]
-PR: #[número-do-pr] (Draft)
+PR: #[número-do-pr]
 
 Próximos passos:
 1. Continue desenvolvendo com `/pdir-commit`
-2. `/pdir-ready-pr` quando pronto
-3. `/pdir-merge-tarefa` para merge
+2. `/pdir-merge-tarefa` quando pronto para merge
 ```
 
 ## Resolução de Problemas

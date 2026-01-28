@@ -15,6 +15,12 @@ Se não fornecido, usa PR da branch atual.
 
 ## Instruções
 
+### 0. Pre-Review (Opcional)
+
+Antes do merge, considere executar uma revisão:
+- `/code-review` - Revisão de código do PR
+- `/pr-review-toolkit:review-pr` - Revisão abrangente com agentes especializados
+
 ### 1. Validação Final
 
 ```bash
@@ -23,13 +29,7 @@ pnpm lint
 pnpm build
 ```
 
-### 2. Marcar como Ready
-
-```bash
-gh pr ready $ARGUMENTS
-```
-
-### 3. Fazer Merge
+### 2. Fazer Merge
 
 ```bash
 gh pr merge $ARGUMENTS --squash --delete-branch
@@ -37,14 +37,14 @@ gh pr merge $ARGUMENTS --squash --delete-branch
 
 **Nota:** `--delete-branch` já deleta branch remota e local.
 
-### 4. Sincronizar Local
+### 3. Sincronizar Local
 
 ```bash
 git checkout main
 git pull origin main
 ```
 
-### 5. Feedback Final
+### 4. Feedback Final
 
 ```
 Merge realizado!
@@ -59,7 +59,6 @@ Tarefa concluída!
 
 **Antes do merge:**
 - [ ] Checks passaram
-- [ ] PR marcado como ready
 
 **Após merge:**
 - [ ] Issue fechada

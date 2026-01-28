@@ -1,32 +1,31 @@
 ---
-description: Cria lista de tarefas a partir de plano/grupo/subgrupo
-argument-hint: [lista-grupos-ou-titulo-do-grupo-subgrupo] [titulo-grupo-ou-subgrupo-contido-no-primeiro-argumento]
+description: Divide plano ou funcionalidade em tarefas atômicas
+argument-hint: [arquivo-ou-texto] [seção-opcional]
 ---
 
-# PDIR: Listar Tarefas
+# PDIR: Dividir em Tarefas
 
-Gera um arquivo markdown com lista de tarefas de um grupo ou subgrupo específico ou direto de um plano dependendo do input.
+Divide um plano, fase ou funcionalidade em tarefas atômicas de implementação.
 
 **Exemplos de uso pelo usuário**:
 
 ```bash
+# PRD completo
+/pdir-dividir-em-tarefas @docs/projeto/PRD.md
+
+# Fase específica do PRD
+/pdir-dividir-em-tarefas @docs/projeto/PRD.md "Fase 1 - Fundação"
+
 # Plano de uma funcionalidade
-/pdir-listar-tarefas @docs/projeto/plano-auth.md
-
-# Lista de grupos + título do grupo/subgrupo
-/pdir-listar-tarefas @docs/projeto/lista-grupos-PRD.md "Autenticação e Autorização"
-/pdir-listar-tarefas @docs/projeto/lista-grupos-PRD.md "Login e Sessão"
-
-# Nome de grupo apenas (sem contexto da lista de grupos)
-/pdir-listar-tarefas "Autenticação e Autorização"
+/pdir-dividir-em-tarefas @docs/projeto/plano-auth.md
 
 # Texto direto
-/pdir-listar-tarefas "Sistema de notificações com email e SMS"
+/pdir-dividir-em-tarefas "Sistema de notificações com email e SMS"
 ```
 
 ## Argumentos
-- `$1`: Arquivo (com `@`), nome de grupo/subgrupo, ou texto direto - **obrigatório**
-- `$2`: Título do grupo/subgrupo (quando `$1` é arquivo de lista de grupos) - **opcional**
+- `$1`: Arquivo (com `@`) ou texto direto - **obrigatório**
+- `$2`: Título da seção/fase dentro do arquivo (quando `$1` é arquivo) - **opcional**
 
 ## Instruções
 
@@ -38,19 +37,18 @@ mkdir -p docs/projeto/tarefas
 
 ### Processar Input
 
-**Se `$1` é arquivo de lista de grupos (`lista-grupos-*.md`) E `$2` fornecido:**
+**Se `$1` é arquivo E `$2` fornecido:**
 - Ler arquivo `$1`
-- Buscar seção com título `$2` (grupo ou subgrupo)
+- Buscar seção com título `$2` (ex: "Fase 1 - Fundação")
 - Extrair conteúdo dessa seção específica
 - Usar como escopo para criar tarefas
 
-**Se `$1` é arquivo (plano, não lista de grupos):**
+**Se `$1` é arquivo (sem `$2`):**
 - Ler arquivo completo
 - Usar como escopo
 
 **Se `$1` é texto:**
-- Se parece ser nome de grupo: buscar em `docs/projeto/grupos/lista-grupos-*.md`
-- Caso contrário: usar como texto direto
+- Usar como texto direto descrevendo o escopo
 
 ### Dividir em Tarefas
 

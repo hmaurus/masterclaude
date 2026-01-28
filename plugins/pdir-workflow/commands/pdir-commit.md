@@ -29,7 +29,7 @@ Formato: `tipo(escopo): descrição`
 **Escopo:** área afetada (`auth`, `api`, `ui`, `db`, etc.) - **obrigatório**
 
 ```bash
-git add -A
+git add [arquivos específicos]
 
 git commit -m "$(cat <<'EOF'
 tipo(escopo): descrição
@@ -55,14 +55,16 @@ Commit realizado!
 [hash] tipo(escopo): descrição
 Branch: [branch]
 
-Estado: nothing to commit, working tree clean
+Próximos passos:
+- /pdir-criar-pr (se pronto para review)
+- /pdir-commit (se há mais mudanças)
 ```
 
 ## Problemas Comuns
 
 **Pre-commit modificou arquivos:**
 ```bash
-git add -A && git commit --amend --no-edit && git push --force-with-lease
+git add [arquivos modificados pelo hook] && git commit --amend --no-edit && git push --force-with-lease
 ```
 
 **Push rejeitado:**
