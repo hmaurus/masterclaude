@@ -1,100 +1,44 @@
 ---
 description: Cria PRD (Product Requirements Document) do projeto
-argument-hint: [descrição do projeto]
+argument-hint: [descrição ou ideia inicial do projeto]
 ---
 
 # PDIR: Criar PRD
 
-Gera um documento de requisitos do produto baseado em entrevista ao usuário usando AskUserQuestion.
-
-**Exemplos de uso:**
-
-```bash
-/pdir-criar-prd "App de delivery de comida para restaurantes locais"
-/pdir-criar-prd  # (interativo - pergunta descrição)
-```
+Cria um PRD usando o skill `doc-coauthoring` para conduzir todo o processo de co-autoria.
 
 ## Argumentos
 
-- `$ARGUMENTS`: Descrição, plano ou ideia inicial do projeto (opcional - se ausente, perguntar)
+- `$ARGUMENTS`: Descrição ou ideia inicial do projeto (opcional — se ausente, o doc-coauthoring perguntará)
 
 ## Instruções
 
-### 1. Criar Pasta (se não existir)
+### 1. Criar pasta
 
-```bash
-mkdir -p docs/projeto
-```
+Criar `docs/projeto/` se ainda não existir.
 
-### 2. Gerar PRD
+### 2. Acionar doc-coauthoring
 
-Criar `docs/projeto/PRD.md` usando o template abaixo.
+Iniciar o workflow do skill `doc-coauthoring` com:
 
-**Diretrizes:**
-- Tom profissional e direto
-- Foco em MVP (3-7 funcionalidades)
-- Inferências razoáveis apenas
-- Documento enxuto (1-2 páginas)
+- **Arquivo de saída:** `docs/projeto/PRD.md`
+- **Contexto inicial do usuário:** `$ARGUMENTS` (se fornecido)
 
-### Template PRD
+O doc-coauthoring conduzirá:
+1. Context Gathering (entrevista, info dump, perguntas clarificadoras)
+2. Refinement & Structure (seção por seção, brainstorm, curadoria)
+3. Reader Testing (teste com sub-agente fresh)
 
-```markdown
-# PRD - [NOME_PROJETO]
+### 3. Feedback final
 
-## Visão Geral
-
-[DESCRIÇÃO expandida - 2-3 parágrafos]
-
-## Objetivo do MVP
-
-[Objetivo claro e mensurável]
-
-## Público-Alvo
-
-[Público principal e secundário]
-
-## Funcionalidades do MVP
-
-### Fase 1 - [Nome descritivo]
-- **[Funcionalidade]** - Descrição breve | Valor entregue
-- **[Funcionalidade]** - Descrição breve | Valor entregue
-
-### Fase 2 - [Nome descritivo]
-- **[Funcionalidade]** - Descrição breve | Valor entregue
-- **[Funcionalidade]** - Descrição breve | Valor entregue
-
-### Fase 3 - [Nome descritivo]
-- **[Funcionalidade]** - Descrição breve | Valor entregue
-
-[3-7 funcionalidades no total, organizadas em 2-4 fases por ordem de implementação]
-
-## Requisitos Não-Funcionais
-
-- Performance: < 3s carregamento
-- Segurança: validação de inputs, autenticação
-- Acessibilidade: WCAG AA
-- Responsivo (caso seja web): mobile-first
-
-## Próximos Passos
-
-1. Revisar e ajustar este PRD
-2. `/pdir-dividir-em-tarefas @docs/projeto/PRD.md "Fase 1 - [nome]"`
-
----
-
-*PRD gerado automaticamente. Revise antes de prosseguir.*
-```
-
-### Feedback Final
+Após o doc-coauthoring concluir, exibir:
 
 ```
-✅ PRD criado!
+PRD criado!
 
-📄 Arquivo: docs/projeto/PRD.md
+Arquivo: docs/projeto/PRD.md
 
 Próximos passos:
 1. Revisar o PRD gerado
 2. /pdir-dividir-em-tarefas @docs/projeto/PRD.md "Fase 1 - [nome]"
 ```
-
-**Dica:** Para refinamento colaborativo do PRD, considere usar `/doc-coauthoring` ou outras skills de documentação disponíveis.
