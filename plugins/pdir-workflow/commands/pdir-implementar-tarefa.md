@@ -25,7 +25,8 @@ gh issue view $ARGUMENTS --json number,title,body
 
 Entender contexto e código existente relacionado à tarefa.
 
-**Skills opcionais para desenvolvimento guiado (se disponíveis):**
+**Analise criticamente se deve usar uma, mais de uma ou nenhuma das Skills abaixo (se disponíveis):**
+- `/brainstorming` - Explorar abordagens e decisões de design antes de implementar
 - `/feature-dev` - Desenvolvimento estruturado com foco em arquitetura
 - `/frontend-design` - Para tarefas envolvendo interface/UI
 - Outras skills de desenvolvimento que você tenha instalado

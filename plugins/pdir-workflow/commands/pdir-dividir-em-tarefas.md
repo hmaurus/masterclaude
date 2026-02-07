@@ -1,11 +1,11 @@
 ---
-description: Divide plano ou funcionalidade em tarefas atômicas
+description: Divide PRD ou outro documento em tarefas atômicas
 argument-hint: [arquivo-ou-texto] [seção-opcional]
 ---
 
 # PDIR: Dividir em Tarefas
 
-Divide um plano, fase ou funcionalidade em tarefas atômicas de implementação.
+Divide um PRD, funcionalidade ou qualquer outro doc em tarefas atômicas para posterior implementação.
 
 **Exemplos de uso pelo usuário**:
 
@@ -52,6 +52,10 @@ mkdir -p docs/projeto/tarefas
 
 ### Dividir em Tarefas
 
+**Analise criticamente se deve usar uma, mais de uma ou nenhuma das Skills para análise antes da divisão (se disponíveis):**
+- `/brainstorming` - Explorar estratégias de divisão quando requisitos são ambíguos
+- `/feature-dev` - Analisar arquitetura do codebase existente para definir fronteiras de tarefas
+
 Para divisão, imagine os seguintes critérios de tamanho e complexidade que cada Tarefa terá após implementada:
 
 | Critério | Medida |
@@ -80,7 +84,7 @@ Para divisão, imagine os seguintes critérios de tamanho e complexidade que cad
 
 ### Gerar Arquivo
 
-**Saída:** `docs/projeto/tarefas/lista-tarefas-[plano-ou-grupo-do-input].md`
+**Saída:** `docs/projeto/tarefas/lista-tarefas-[prd-plano-ou-grupo-do-input].md`
 
 **Estrutura:**
 

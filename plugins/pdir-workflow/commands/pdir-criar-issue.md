@@ -29,10 +29,10 @@ Cria uma Issue no GitHub a partir de `$ARGUMENTS`.
 
 ## Interpretar $ARGUMENTS
 
-Analise o conteúdo de `$ARGUMENTS`:
+Analise o conteúdo de `$ARGUMENTS` para extrair o conteúdo da tarefa específica:
 
-1. **Se contém `.md#`** → extrair arquivo e número da tarefa
-2. **Se contém `.md` seguido de texto entre aspas** → extrair arquivo e buscar tarefa pelo texto
+1. **Se contém `.md#`** → no arquivo, buscar tarefa pelo número
+2. **Se contém `.md` seguido de texto entre aspas** → no arquivo, buscar tarefa pelo texto
 3. **Caso contrário** → tratar como descrição livre
 
 ## Extrair de Arquivo de Tarefas
