@@ -26,10 +26,13 @@ gh issue view $ARGUMENTS --json number,title,body
 Entender contexto e código existente relacionado à tarefa.
 
 **Analise criticamente se deve usar uma, mais de uma ou nenhuma das Skills abaixo (se disponíveis):**
+- **localidade:** ~/.claude/plugins e ~/.claude/skills
 - `/brainstorming` - Explorar abordagens e decisões de design antes de implementar
 - `/feature-dev` - Desenvolvimento estruturado com foco em arquitetura
 - `/frontend-design` - Para tarefas envolvendo interface/UI
-- Outras skills de desenvolvimento que você tenha instalado
+- `/ui-ux-pro-max` - Guia de design com estilos, cores, fontes, UX e recomendações pesquisáveis por prioridade
+- `/vercel-react-best-practices` - Guia de otimização de desempenho para aplicações React e Next.js
+- `/next-best-practices` - Aplique estas regras ao escrever ou revisar código Next.js
 
 ### 3. Criar Branch
 
