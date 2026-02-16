@@ -56,7 +56,7 @@ git checkout -b [tipo]/[número]-[slug]
 - [ ] Funcionalidade testada
 - [ ] Código segue padrões do projeto
 
-**Dica:** Se disponível, use `/webapp-testing` para testes automatizados de interface, ou outras skills de teste que você tenha.
+**Dica:** Se disponível, use `/webapp-testing` (skill) ou `playwright MCP` (plugin) para testes automatizados de interface, ou outras skills de teste que julgar relevantes para o tipo de tarefa.
 
 ### 6. Documentar na Issue
 

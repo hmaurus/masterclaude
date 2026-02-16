@@ -46,8 +46,8 @@ Ao referenciar arquivo:
 
 ## Formatar Título
 
-- Se extraído de arquivo: usar título já formatado (`type(scope): descrição`)
-- Se prompt livre: identificar tipo (`feat`, `fix`, `refactor`, `docs`, `chore`, `test`) e escopo
+- Se o título ainda não tiver formatado (`type(scope): descrição`)
+  - identificar tipo (`feat`, `fix`, `refactor`, `docs`, `chore`, `test`) e escopo
 
 ## Criar Issue
 
