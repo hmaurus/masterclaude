@@ -5,7 +5,7 @@ argument-hint: [arquivo-ou-texto] [seção-opcional]
 
 # PDIR: Dividir em Tarefas
 
-Divide um PRD, funcionalidade ou qualquer outro doc em tarefas atômicas para posterior implementação.
+Divide um PRD, funcionalidade ou qualquer outro doc em tarefas atômicas para serem posteriormente implementadas por AI Code Assistants (ex.: claude code, cursor etc)
 
 **Exemplos de uso pelo usuário**:
 
@@ -56,16 +56,6 @@ mkdir -p docs/projeto/tarefas
 - `/brainstorming` - Explorar estratégias de divisão quando requisitos são ambíguos
 - `/feature-dev` - Analisar arquitetura do codebase existente para definir fronteiras de tarefas
 
-Para divisão, imagine os seguintes critérios de tamanho e complexidade que cada Tarefa terá após implementada:
-
-| Critério | Medida |
-|----------|--------|
-| Arquivos | 1-3 arquivos |
-| Linhas de código | ~50-400 linhas |
-| Objetivo | 1 objetivo claro |
-| Dependências | ≤3 outras tarefas |
-| Testabilidade | Isoladamente |
-
 **Boas práticas:**
 - Atômica: uma mudança lógica
 - Específica: escopo bem definido
@@ -103,7 +93,7 @@ As tarefas estão em ordem lógica. Tarefas com `Depende de` aguardam conclusão
 
 ## [type](domain): título da primeira tarefa
 
-**Descrição:** O que deve ser feito (1-3 linhas).
+**Descrição:** Breve descrição clara do que deve ser feito
 
 **Arquivos estimados:** [número] arquivo(s)
 
@@ -139,21 +129,10 @@ As tarefas estão em ordem lógica. Tarefas com `Depende de` aguardam conclusão
 - Identifique dependências explicitamente
 
 **Evite:**
-- Tarefas muito grandes (>500 linhas)
+- Tarefas muito grandes
 - Tarefas vagas ("melhorar código")
 - Múltiplos objetivos em uma tarefa
-- Muitos arquivos (>5)
-
-**Divisão correta:**
-
-Grande: `feat(posts): implementar sistema completo`
-
-Dividida:
-- `feat(posts): criar schema e model`
-- `feat(posts): criar endpoint POST /api/posts`
-- `feat(posts): criar endpoint GET /api/posts`
-- `feat(posts): criar página de listagem`
-- `feat(posts): adicionar paginação`
+- Muitos arquivos
 
 ### Feedback Final
 
