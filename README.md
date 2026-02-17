@@ -32,6 +32,7 @@ Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estr
 | `/pdir-dividir-em-tarefas` | plano/fase → lista de tarefas |
 | `/pdir-criar-issue` | tarefa → Issue GitHub |
 | `/pdir-implementar-tarefa` | Issue → branch + código |
+| `/pdir-implementar-tarefa-sem-branch` | Issue → código na branch atual |
 | `/pdir-commit` | commit + push |
 | `/pdir-criar-pr` | cria PR vinculado a Issue |
 | `/pdir-merge-tarefa` | review + merge + limpeza |
