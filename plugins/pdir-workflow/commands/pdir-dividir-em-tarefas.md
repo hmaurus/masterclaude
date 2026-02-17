@@ -35,11 +35,12 @@ Extrair do `$ARGUMENTS`:
 
 ### 2. Dividir em Tarefas
 
-Cada tarefa deve ser:
-- **Atômica:** uma mudança lógica, escopo de 1 PR
+Cada tarefa deve ter o tamanho ideal para ser implementada em **uma sessão de AI Coding** (~1-8 arquivos, escopo de 1 PR). Critérios:
+- **Atômica:** uma mudança lógica coesa
 - **Específica:** verbos de ação claros (implementar, criar, adicionar, corrigir)
 - **Testável:** critérios claros de conclusão
 - **Independente:** mínimas dependências entre tarefas
+- Se uma tarefa parece grande demais para uma sessão, subdivida. Se parece trivial demais, agrupe com tarefas relacionadas.
 
 Ordenar por dependência: infra/config → modelos/types → lógica de negócio → API → UI → testes de integração/E2E.
 

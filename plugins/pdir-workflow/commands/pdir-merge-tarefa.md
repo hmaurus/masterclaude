@@ -38,9 +38,11 @@ gh pr merge $ARGUMENTS --squash --delete-branch
 ### 4. Sincronizar Local
 
 ```bash
+FEATURE_BRANCH=$(git branch --show-current)
 DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
 git checkout "$DEFAULT_BRANCH"
 git pull origin "$DEFAULT_BRANCH"
+git branch -d "$FEATURE_BRANCH"
 ```
 
 ### 5. Feedback Final

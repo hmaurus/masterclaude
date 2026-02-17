@@ -45,8 +45,9 @@ git push -u origin "$(git branch --show-current)"
 
 ```bash
 gh issue view [número] --json number,title,body
-git log main..HEAD --oneline
-git diff main --stat
+DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
+git log "$DEFAULT_BRANCH"..HEAD --oneline
+git diff "$DEFAULT_BRANCH" --stat
 ```
 
 Derivar `type` do prefixo da branch (ex: `feat/` → `feat`, `fix/` → `fix`). Derivar título e resumo a partir da Issue e dos commits.

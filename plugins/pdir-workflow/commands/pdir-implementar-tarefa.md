@@ -48,6 +48,8 @@ Derivar `tipo` do título da Issue: `feat`, `fix`, `refactor`, `docs`, `chore`, 
 git checkout -b [tipo]/[número]-[slug]
 ```
 
+Slug: palavras-chave do título em kebab-case, sem acentos, max 50 chars.
+
 Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
 
 ### 4. Implementar
