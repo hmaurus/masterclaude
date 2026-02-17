@@ -7,9 +7,7 @@ argument-hint: [descrição ou ideia inicial do projeto]
 
 Cria um PRD usando o skill `doc-coauthoring` para conduzir todo o processo de co-autoria.
 
-## Argumentos
-
-- `$ARGUMENTS`: Descrição ou ideia inicial do projeto (opcional — se ausente, o doc-coauthoring perguntará)
+**Pré-requisito:** skill `doc-coauthoring` deve estar disponível. Se não estiver, informar ao usuário.
 
 ## Instruções
 
@@ -31,8 +29,6 @@ O doc-coauthoring conduzirá:
 
 ### 3. Feedback final
 
-Após o doc-coauthoring concluir, exibir:
-
 ```
 PRD criado!
 
@@ -40,5 +36,5 @@ Arquivo: docs/projeto/PRD.md
 
 Próximos passos:
 1. Revisar o PRD gerado
-2. /pdir-dividir-em-tarefas @docs/projeto/PRD.md "Fase 1 - [nome]"
+2. /pdir-dividir-em-tarefas docs/projeto/PRD.md#nome da fase
 ```

@@ -8,37 +8,31 @@ Sincroniza, commita e envia mudanças para origin.
 
 ## Instruções
 
-### 1. Sincronizar e Verificar
+### 1. Verificar Estado
 
-Informações da branch:
-!`git status -sb`
-!`git diff --stat`
+```bash
+git status -sb
+git diff --stat
+```
 
-**Interpretar saída do `git status -sb`:**
-- `## main...origin/main` → tem upstream, execute `git pull --ff-only`
-- `## main` (sem `...`) → branch nova, pule o pull
-
-**Se não houver mudanças:** Informar e encerrar.
+- `## branch...origin/branch` (tem upstream) → `git pull --ff-only`
+- `## branch` (sem `...`) → branch nova, pular pull
+- Sem mudanças → informar e encerrar
 
 ### 2. Criar Commit
 
-Formato: `tipo(escopo): descrição`
+Formato: `type(scope): descrição`
 
-**Tipos:** `wip`, `feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`, `perf`, `ci`, `build`
+Types: `wip`, `feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`, `perf`, `ci`, `build`
 
-**Escopo:** área afetada (`auth`, `api`, `ui`, `db`, etc.) - **obrigatório**
+Scope: área afetada — **obrigatório**
 
 ```bash
 git add [arquivos específicos]
 
-git commit -m "$(cat <<'EOF'
-tipo(escopo): descrição
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
+git commit -m "type(scope): descrição" \
+  -m "🤖 Generated with [Claude Code](https://claude.com/claude-code)" \
+  -m "Co-Authored-By: Claude Code <noreply@anthropic.com>"
 ```
 
 ### 3. Push
@@ -47,27 +41,17 @@ EOF
 git push -u origin "$(git branch --show-current)"
 ```
 
+Se pre-commit modificou arquivos: stage os arquivos modificados e crie um **novo commit** (nunca `--amend`).
+
 ### 4. Feedback Final
 
 ```
 Commit realizado!
 
-[hash] tipo(escopo): descrição
+[hash] type(scope): descrição
 Branch: [branch]
 
 Próximos passos:
 - /pdir-criar-pr (se pronto para review)
 - /pdir-commit (se há mais mudanças)
-```
-
-## Problemas Comuns
-
-**Pre-commit modificou arquivos:**
-```bash
-git add [arquivos modificados pelo hook] && git commit --amend --no-edit && git push --force-with-lease
-```
-
-**Push rejeitado:**
-```bash
-git pull --rebase && git push
 ```

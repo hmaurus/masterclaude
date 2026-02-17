@@ -1,5 +1,5 @@
 ---
-description: Valida, faz merge e limpa branch
+description: Valida, faz squash merge do PR e limpa branch
 argument-hint: [pr-number]
 ---
 
@@ -9,42 +9,40 @@ Valida, faz merge do PR e limpa branch local/remota.
 
 ## Entrada
 
-`$ARGUMENTS` (opcional): Número do PR (ex: `123`)
-
-Se não fornecido, usa PR da branch atual.
+`$ARGUMENTS` (opcional): número do PR. Se não fornecido, usa PR da branch atual.
 
 ## Instruções
 
-### 0. Pre-Review (Opcional)
+### 1. Pre-Review (Opcional)
 
-Antes do merge, considere executar uma revisão:
-- `/code-review` - Revisão de código do PR
-- `/pr-review-toolkit:review-pr` - Revisão abrangente com agentes especializados
+Se disponível, considerar executar `/code-review` antes do merge.
 
-### 1. Validação Final
+### 2. Validação Final
+
+Executar os checks do projeto (lint, type-check, build). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
+
+### 3. Verificar CI
 
 ```bash
-pnpm check
-pnpm lint
-pnpm build
+gh pr checks $ARGUMENTS
 ```
 
-### 2. Fazer Merge
+Se houver checks falhando, informar ao usuário antes de prosseguir.
+
+### 4. Fazer Merge
 
 ```bash
 gh pr merge $ARGUMENTS --squash --delete-branch
 ```
 
-**Nota:** `--delete-branch` já deleta branch remota e local.
-
-### 3. Sincronizar Local
+### 5. Sincronizar Local
 
 ```bash
 git checkout main
 git pull origin main
 ```
 
-### 4. Feedback Final
+### 6. Feedback Final
 
 ```
 Merge realizado!
@@ -53,20 +51,4 @@ PR: #[número] → main
 Branch deletada
 
 Tarefa concluída!
-```
-
-## Checklist
-
-**Antes do merge:**
-- [ ] Checks passaram
-
-**Após merge:**
-- [ ] Issue fechada
-- [ ] Main atualizada
-
-## Exemplo
-
-```bash
-/pdir-merge-tarefa        # PR da branch atual
-/pdir-merge-tarefa 123    # PR específico
 ```

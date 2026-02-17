@@ -1,15 +1,13 @@
 ---
 description: Cria Pull Request para a branch atual
+argument-hint: <número-da-issue>
 ---
 
 # PDIR: Criar PR
 
-Cria Pull Request para a branch atual.
+Cria Pull Request vinculado a uma Issue.
 
-**Pré-requisitos:**
-- Estar em branch de feature (não main)
-- Commits já realizados (`/pdir-commit`)
-- Issue criada
+**Pré-requisitos:** estar em branch de feature (não main), commits já realizados (`/pdir-commit`).
 
 ## Instruções
 
@@ -20,19 +18,31 @@ git branch --show-current
 git status
 ```
 
-**Se estiver na main:** Informar erro e encerrar.
+Se estiver na main: informar erro e encerrar.
 
-### 2. Push
+### 2. Push (se necessário)
+
+Verificar se branch já tem upstream. Se não:
 
 ```bash
 git push -u origin "$(git branch --show-current)"
 ```
 
-### 3. Criar Pull Request
+### 3. Buscar Issue
+
+`$ARGUMENTS`: número da Issue (ex: `42` ou `#42`).
+
+```bash
+gh issue view $ARGUMENTS --json number,title,body
+```
+
+Derivar título do PR a partir do título da Issue.
+
+### 4. Criar Pull Request
 
 ```bash
 gh pr create \
-  --title "tipo(escopo): descrição" \
+  --title "type(scope): descrição derivada da Issue" \
   --body "$(cat <<'EOF'
 Closes #[número-da-issue]
 
@@ -45,39 +55,20 @@ Closes #[número-da-issue]
 - [Mudança 1]
 - [Mudança 2]
 
-## Checklist
-
-- [x] Código segue padrões do projeto
-- [x] Funcionalidade testada
-
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```
 
-### 4. Confirmar
+### 5. Feedback Final
 
-Informar ao usuário:
 ```
 PR criado!
 
-Branch: [nome-da-branch]
+Branch: [branch]
 PR: #[número-do-pr]
 
 Próximos passos:
-1. Continue desenvolvendo com `/pdir-commit`
-2. `/pdir-merge-tarefa` quando pronto para merge
-```
-
-## Resolução de Problemas
-
-**Push falhou (conflito):**
-```bash
-git pull origin main --rebase
-git push origin "$(git branch --show-current)"
-```
-
-**PR já existe:**
-```bash
-gh pr view  # ver PR existente
+- /pdir-commit (continuar desenvolvendo)
+- /pdir-merge-tarefa (quando pronto para merge)
 ```

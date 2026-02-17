@@ -1,15 +1,11 @@
 ---
 description: Implementa tarefa a partir de Issue existente
-argument-hint: [número-issue]
+argument-hint: <número-issue>
 ---
 
 # PDIR: Implementar Tarefa
 
-Implementa uma tarefa a partir de uma Issue existente no GitHub.
-
-## Entrada
-
-`$ARGUMENTS`: Número da Issue (ex: `42` ou `#42`)
+Implementa uma tarefa a partir de uma Issue do GitHub.
 
 ## Instruções
 
@@ -19,20 +15,11 @@ Implementa uma tarefa a partir de uma Issue existente no GitHub.
 gh issue view $ARGUMENTS --json number,title,body
 ```
 
-**Se Issue não existir:** Informar ao usuário para criar usando `/pdir-criar-issue`.
+Se não existir: informar para criar usando `/pdir-criar-issue`.
 
 ### 2. Analisar Projeto
 
-Entender contexto e código existente relacionado à tarefa.
-
-**Analise criticamente se deve usar uma, mais de uma ou nenhuma das Skills abaixo (se disponíveis):**
-- **localidade:** ~/.claude/plugins e ~/.claude/skills
-- `/brainstorming` - Explorar abordagens e decisões de design antes de implementar
-- `/feature-dev` - Desenvolvimento estruturado com foco em arquitetura
-- `/frontend-design` - Para tarefas envolvendo interface/UI
-- `/ui-ux-pro-max` - Guia de design com estilos, cores, fontes, UX e recomendações pesquisáveis por prioridade
-- `/vercel-react-best-practices` - Guia de otimização de desempenho para aplicações React e Next.js
-- `/next-best-practices` - Aplique estas regras ao escrever ou revisar código Next.js
+Ler arquivos relacionados à tarefa, identificar padrões e convenções do codebase existente. Verificar skills disponíveis que possam ser relevantes ao tipo de tarefa (ex: brainstorming, feature-dev, frontend-design, testing).
 
 ### 3. Criar Branch
 
@@ -40,30 +27,20 @@ Entender contexto e código existente relacionado à tarefa.
 git checkout -b [tipo]/[número]-[slug]
 ```
 
-**Exemplos:**
-- `feat(auth): implementar login` → `feat/42-implementar-login`
-- `fix(api): corrigir timeout` → `fix/15-corrigir-timeout`
+Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
 
-### 4. Implementar Tarefa
+### 4. Implementar
 
-- Planejar e Implementar a tarefa descrita na Issue.
-- Esclarecer dúvidas com o usuário, se necessário.
+Planejar e implementar a tarefa descrita na Issue. Esclarecer dúvidas com o usuário se necessário.
 
-### 5. Validações
+### 5. Validar
 
-- [ ] TypeScript sem erros (`pnpm tsc`)
-- [ ] Linting passou (`pnpm lint`)
-- [ ] Funcionalidade testada
-- [ ] Código segue padrões do projeto
-
-**Dica:** Se disponível, use `/webapp-testing` (skill) ou `playwright MCP` (plugin) para testes automatizados de interface, ou outras skills de teste que julgar relevantes para o tipo de tarefa.
+Executar os checks do projeto (lint, type-check, testes). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
 
 ### 6. Documentar na Issue
 
-Registrar o que foi implementado:
-
 ```bash
-gh issue comment [número] --body "$(cat <<'EOF'
+gh issue comment $ARGUMENTS --body "$(cat <<'EOF'
 ## Implementação Realizada
 
 ### Arquivos modificados/criados
@@ -81,15 +58,9 @@ EOF
 Tarefa implementada!
 
 Issue: #[número] - [título]
-Branch: [nome-da-branch]
+Branch: [branch]
 
-Próximos passos possíveis para o usuário:
+Próximos passos:
 - Testar implementação
 - /pdir-commit
-```
-
-## Exemplo
-
-```bash
-/pdir-implementar-tarefa 42
 ```

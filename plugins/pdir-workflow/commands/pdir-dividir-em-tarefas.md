@@ -1,82 +1,51 @@
 ---
 description: Divide PRD ou outro documento em tarefas atômicas
-argument-hint: [arquivo-ou-texto] [seção-opcional]
+argument-hint: <arquivo>#<seção> | <descrição livre>
 ---
 
 # PDIR: Dividir em Tarefas
 
-Divide um PRD, funcionalidade ou qualquer outro doc em tarefas atômicas para serem posteriormente implementadas por AI Code Assistants (ex.: claude code, cursor etc)
+Divide um documento ou descrição em tarefas atômicas para implementação por AI Code Assistants.
 
-**Exemplos de uso pelo usuário**:
+`$ARGUMENTS`: referência a documento (com ou sem seção) ou descrição livre.
+
+## Formato
 
 ```bash
-# PRD completo
-/pdir-dividir-em-tarefas @docs/projeto/PRD.md
-
-# Fase específica do PRD
-/pdir-dividir-em-tarefas @docs/projeto/PRD.md "Fase 1 - Fundação"
-
-# Plano de uma funcionalidade
-/pdir-dividir-em-tarefas @docs/projeto/plano-auth.md
-
-# Texto direto
-/pdir-dividir-em-tarefas "Sistema de notificações com email e SMS"
+/pdir-dividir-em-tarefas docs/projeto/PRD.md#Fase 1 - Fundação
+/pdir-dividir-em-tarefas docs/projeto/PRD.md
+/pdir-dividir-em-tarefas Sistema de notificações com email e SMS
 ```
-
-## Argumentos
-- `$1`: Arquivo (com `@`) ou texto direto - **obrigatório**
-- `$2`: Título da seção/fase dentro do arquivo (quando `$1` é arquivo) - **opcional**
 
 ## Instruções
 
-### Criar Pasta (se não existir)
+### 1. Processar $ARGUMENTS
 
-```bash
-mkdir -p docs/projeto/tarefas
-```
+**Se contém `#`** → ler arquivo, buscar seção que contenha o trecho após `#`, extrair conteúdo dessa seção como escopo.
 
-### Processar Input
+**Se contém nome de arquivo (sem `#`)** → ler arquivo completo como escopo.
 
-**Se `$1` é arquivo E `$2` fornecido:**
-- Ler arquivo `$1`
-- Buscar seção com título `$2` (ex: "Fase 1 - Fundação")
-- Extrair conteúdo dessa seção específica
-- Usar como escopo para criar tarefas
+**Caso contrário** → usar como descrição livre.
 
-**Se `$1` é arquivo (sem `$2`):**
-- Ler arquivo completo
-- Usar como escopo
+### 2. Analisar Antes de Dividir
 
-**Se `$1` é texto:**
-- Usar como texto direto descrevendo o escopo
+Avaliar se skills disponíveis podem ajudar na análise (ex: `brainstorming`, `feature-dev`). Usar se aplicável.
 
-### Dividir em Tarefas
+### 3. Dividir em Tarefas
 
-**Analise criticamente se deve usar uma, mais de uma ou nenhuma das Skills para análise antes da divisão (se disponíveis):**
-- `/brainstorming` - Explorar estratégias de divisão quando requisitos são ambíguos
-- `/feature-dev` - Analisar arquitetura do codebase existente para definir fronteiras de tarefas
+Cada tarefa deve ser:
+- **Atômica:** uma mudança lógica, escopo de 1 PR
+- **Específica:** verbos de ação claros (implementar, criar, adicionar, corrigir)
+- **Testável:** critérios claros de conclusão
+- **Independente:** mínimas dependências entre tarefas
 
-**Boas práticas:**
-- Atômica: uma mudança lógica
-- Específica: escopo bem definido
-- Testável: sabe quando está pronta
-- Independente: mínimas dependências
+Ordenar por dependência: infra/config → modelos/types → lógica de negócio → API → UI → testes.
 
-### Criar Títulos
+### 4. Gerar Arquivo
 
-**Formato:** `[type](domain): descrição curta e clara`
+Criar `docs/projeto/tarefas/` se não existir.
 
-**Types:**
-
-`feat`, `fix`, `refactor`, `docs`, `test`, `chore` ...
-
-**Domain:** Termos do projeto (`auth`, `api`, `ui`, `db`, `user`, `posts`, `payments`)
-
-### Gerar Arquivo
-
-**Saída:** `docs/projeto/tarefas/lista-tarefas-[prd-plano-ou-grupo-do-input].md`
-
-**Estrutura:**
+**Saída:** `docs/projeto/tarefas/lista-tarefas-[nome-do-escopo].md`
 
 ```markdown
 # Tarefas - [Nome do Escopo]
@@ -85,56 +54,22 @@ mkdir -p docs/projeto/tarefas
 > **Data:** YYYY-MM-DD
 > **Total:** [número] tarefas
 
-## Ordem de Implementação
-
-As tarefas estão em ordem lógica. Tarefas com `Depende de` aguardam conclusão das dependências.
-
 ---
 
-## [type](domain): título da primeira tarefa
+## type(scope): título da tarefa
 
-**Descrição:** Breve descrição clara do que deve ser feito
+**Descrição:** O que deve ser feito
 
 **Arquivos estimados:** [número] arquivo(s)
 
-**Dependências:** Nenhuma (ou Depende de: #[números])
+**Dependências:** Nenhuma (ou Depende de: títulos das tarefas)
 
 ---
-
-## [type](domain): título da segunda tarefa ...
 ```
 
-### Instruções para Ordem de Implementação
+**Títulos:** formato `type(scope): descrição curta`. Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`. Scope: área do projeto inferida do contexto.
 
-**Ordem típica:**
-1. Setup/Infraestrutura (schema, config)
-2. Modelos/Types
-3. Utilitários/Helpers
-4. Lógica de negócio
-5. API/Endpoints
-6. UI/Frontend
-7. Testes
-8. Documentação
-
-**Dependências:**
-- Tarefas sem dependências primeiro
-- Marque explicitamente com `Depende de: #[números]`
-
-## Dicas
-
-**Faça:**
-- Tarefas atômicas e autocontidas
-- Verbos de ação claros (implementar, criar, adicionar, corrigir)
-- Escopo pequeno (1 PR, 1 review)
-- Identifique dependências explicitamente
-
-**Evite:**
-- Tarefas muito grandes
-- Tarefas vagas ("melhorar código")
-- Múltiplos objetivos em uma tarefa
-- Muitos arquivos
-
-### Feedback Final
+### 5. Feedback Final
 
 ```
 Lista de tarefas criada!
@@ -142,5 +77,5 @@ Lista de tarefas criada!
 Arquivo: docs/projeto/tarefas/lista-tarefas-[nome].md
 Total: [N] tarefas
 
-Próximo passo: /pdir-criar-issue "título da tarefa"
+Próximo passo: /pdir-criar-issue lista-tarefas-[nome].md#título da tarefa
 ```
