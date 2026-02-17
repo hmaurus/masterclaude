@@ -1,6 +1,6 @@
 ---
 description: Implementa tarefa a partir de Issue existente
-argument-hint: <número-issue> [/skill1 /skill2 ...]
+argument-hint: <número-issue> [skills: skill1, skill2, ...]
 ---
 
 # PDIR: Implementar Tarefa
@@ -11,7 +11,7 @@ Implementa uma tarefa a partir de uma Issue do GitHub.
 
 Extrair do `$ARGUMENTS`:
 - **Número da Issue:** primeiro valor numérico (ex: `42`)
-- **Skills:** palavras começando com `/` (ex: `/brainstorming /feature-dev`)
+- **Skills:** se contém `skills:`, extrair nomes separados por vírgula (ex: `skills: brainstorming, feature-dev`)
 
 Se skills foram passadas, carregá-las **obrigatoriamente** antes de prosseguir.
 

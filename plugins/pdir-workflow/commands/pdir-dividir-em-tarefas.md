@@ -1,6 +1,6 @@
 ---
 description: Divide PRD ou outro documento em tarefas atômicas
-argument-hint: <arquivo>#<seção> [/skill1 /skill2 ...] | <descrição livre> [/skill1 /skill2 ...]
+argument-hint: <arquivo>#<seção> [skills: skill1, skill2] | <descrição livre> [skills: skill1, skill2]
 ---
 
 # PDIR: Dividir em Tarefas
@@ -10,14 +10,14 @@ Divide um documento ou descrição em tarefas atômicas para implementação por
 ## Processar $ARGUMENTS
 
 Extrair do `$ARGUMENTS`:
-- **Skills:** palavras começando com `/` (ex: `/brainstorming /feature-dev`). Se passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+- **Skills:** se contém `skills:`, extrair nomes separados por vírgula (ex: `skills: brainstorming, feature-dev`). Se passadas, carregá-las **obrigatoriamente** antes de prosseguir.
 - **Restante:** referência a documento ou descrição livre.
 
 ## Formato
 
 ```bash
 /pdir-dividir-em-tarefas docs/projeto/PRD.md#Fase 1 - Fundação
-/pdir-dividir-em-tarefas docs/projeto/PRD.md /brainstorming
+/pdir-dividir-em-tarefas docs/projeto/PRD.md skills: brainstorming
 /pdir-dividir-em-tarefas Sistema de notificações com email e SMS
 ```
 
