@@ -1,6 +1,6 @@
 ---
 description: Valida, faz squash merge do PR e limpa branch
-argument-hint: [pr-number]
+argument-hint: [numero-do-pr]
 ---
 
 # PDIR: Merge Tarefa
@@ -51,4 +51,7 @@ PR: #[número] → main
 Branch deletada
 
 Tarefa concluída!
+
+Próximos passos:
+- /pdir-implementar-tarefa [próxima-issue] (se houver mais tarefas)
 ```

@@ -1,25 +1,33 @@
 ---
 description: Implementa tarefa a partir de Issue existente
-argument-hint: <número-issue>
+argument-hint: <número-issue> [/skill1 /skill2 ...]
 ---
 
 # PDIR: Implementar Tarefa
 
 Implementa uma tarefa a partir de uma Issue do GitHub.
 
+## Processar $ARGUMENTS
+
+Extrair do `$ARGUMENTS`:
+- **Número da Issue:** primeiro valor numérico (ex: `42`)
+- **Skills:** palavras começando com `/` (ex: `/brainstorming /feature-dev`)
+
+Se skills foram passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+
 ## Instruções
 
 ### 1. Buscar Issue
 
 ```bash
-gh issue view $ARGUMENTS --json number,title,body
+gh issue view [número] --json number,title,body
 ```
 
 Se não existir: informar para criar usando `/pdir-criar-issue`.
 
 ### 2. Analisar Projeto
 
-Ler arquivos relacionados à tarefa, identificar padrões e convenções do codebase existente. Verificar skills disponíveis que possam ser relevantes ao tipo de tarefa (ex: brainstorming, feature-dev, frontend-design, testing).
+Ler arquivos relacionados à tarefa, identificar padrões e convenções do codebase existente.
 
 ### 3. Criar Branch
 
@@ -40,7 +48,7 @@ Executar os checks do projeto (lint, type-check, testes). Consultar `package.jso
 ### 6. Documentar na Issue
 
 ```bash
-gh issue comment $ARGUMENTS --body "$(cat <<'EOF'
+gh issue comment [número] --body "$(cat <<'EOF'
 ## Implementação Realizada
 
 ### Arquivos modificados/criados
@@ -61,6 +69,6 @@ Issue: #[número] - [título]
 Branch: [branch]
 
 Próximos passos:
-- Testar implementação
 - /pdir-commit
+- /pdir-criar-pr [número-issue] (se implementação completa)
 ```

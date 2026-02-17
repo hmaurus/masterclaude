@@ -27,7 +27,7 @@ O doc-coauthoring conduzirá:
 2. Refinement & Structure (seção por seção, brainstorm, curadoria)
 3. Reader Testing (teste com sub-agente fresh)
 
-### 3. Feedback final
+### 3. Feedback Final
 
 ```
 PRD criado!
@@ -35,6 +35,6 @@ PRD criado!
 Arquivo: docs/projeto/PRD.md
 
 Próximos passos:
-1. Revisar o PRD gerado
-2. /pdir-dividir-em-tarefas docs/projeto/PRD.md#nome da fase
+- Revisar o PRD gerado
+- /pdir-dividir-em-tarefas docs/projeto/PRD.md
 ```

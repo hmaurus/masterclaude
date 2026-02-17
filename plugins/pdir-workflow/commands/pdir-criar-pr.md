@@ -69,6 +69,6 @@ Branch: [branch]
 PR: #[número-do-pr]
 
 Próximos passos:
-- /pdir-commit (continuar desenvolvendo)
-- /pdir-merge-tarefa (quando pronto para merge)
+- /pdir-merge-tarefa (quando aprovado)
+- /pdir-commit (se continuar desenvolvendo)
 ```

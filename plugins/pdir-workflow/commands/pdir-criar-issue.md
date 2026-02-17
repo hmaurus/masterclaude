@@ -64,9 +64,10 @@ Issue criada!
 Issue: #[número] - [título]
 Link: [url]
 Labels: [labels]
-Milestone: [milestone]
+Milestone: [milestone] (se aplicável)
 
-Próximo passo: /pdir-implementar-tarefa [número]
+Próximos passos:
+- /pdir-implementar-tarefa [número]
 
 Dica: execute /clear antes para começar com contexto limpo.
 ```

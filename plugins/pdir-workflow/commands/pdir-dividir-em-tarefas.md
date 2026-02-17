@@ -1,25 +1,29 @@
 ---
 description: Divide PRD ou outro documento em tarefas atômicas
-argument-hint: <arquivo>#<seção> | <descrição livre>
+argument-hint: <arquivo>#<seção> [/skill1 /skill2 ...] | <descrição livre> [/skill1 /skill2 ...]
 ---
 
 # PDIR: Dividir em Tarefas
 
 Divide um documento ou descrição em tarefas atômicas para implementação por AI Code Assistants.
 
-`$ARGUMENTS`: referência a documento (com ou sem seção) ou descrição livre.
+## Processar $ARGUMENTS
+
+Extrair do `$ARGUMENTS`:
+- **Skills:** palavras começando com `/` (ex: `/brainstorming /feature-dev`). Se passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+- **Restante:** referência a documento ou descrição livre.
 
 ## Formato
 
 ```bash
 /pdir-dividir-em-tarefas docs/projeto/PRD.md#Fase 1 - Fundação
-/pdir-dividir-em-tarefas docs/projeto/PRD.md
+/pdir-dividir-em-tarefas docs/projeto/PRD.md /brainstorming
 /pdir-dividir-em-tarefas Sistema de notificações com email e SMS
 ```
 
 ## Instruções
 
-### 1. Processar $ARGUMENTS
+### 1. Identificar Escopo
 
 **Se contém `#`** → ler arquivo, buscar seção que contenha o trecho após `#`, extrair conteúdo dessa seção como escopo.
 
@@ -27,11 +31,7 @@ Divide um documento ou descrição em tarefas atômicas para implementação por
 
 **Caso contrário** → usar como descrição livre.
 
-### 2. Analisar Antes de Dividir
-
-Avaliar se skills disponíveis podem ajudar na análise (ex: `brainstorming`, `feature-dev`). Usar se aplicável.
-
-### 3. Dividir em Tarefas
+### 2. Dividir em Tarefas
 
 Cada tarefa deve ser:
 - **Atômica:** uma mudança lógica, escopo de 1 PR
@@ -41,7 +41,7 @@ Cada tarefa deve ser:
 
 Ordenar por dependência: infra/config → modelos/types → lógica de negócio → API → UI → testes.
 
-### 4. Gerar Arquivo
+### 3. Gerar Arquivo
 
 Criar `docs/projeto/tarefas/` se não existir.
 
@@ -69,7 +69,7 @@ Criar `docs/projeto/tarefas/` se não existir.
 
 **Títulos:** formato `type(scope): descrição curta`. Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`. Scope: área do projeto inferida do contexto.
 
-### 5. Feedback Final
+### 4. Feedback Final
 
 ```
 Lista de tarefas criada!
@@ -77,5 +77,6 @@ Lista de tarefas criada!
 Arquivo: docs/projeto/tarefas/lista-tarefas-[nome].md
 Total: [N] tarefas
 
-Próximo passo: /pdir-criar-issue lista-tarefas-[nome].md#título da tarefa
+Próximos passos:
+- /pdir-criar-issue docs/projeto/tarefas/lista-tarefas-[nome].md#título da tarefa
 ```
