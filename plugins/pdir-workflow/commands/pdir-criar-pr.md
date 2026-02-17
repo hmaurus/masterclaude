@@ -1,6 +1,6 @@
 ---
-description: Cria Pull Request vinculado a uma Issue do GitHub. Verifica estado da branch, faz push se necessário, busca dados da Issue e gera PR com Conventional Commits
-argument-hint: <número-da-issue>
+description: Cria Pull Request vinculado a uma Issue do GitHub. Extrai Issue da branch automaticamente ou recebe número explícito
+argument-hint: [número-da-issue]
 ---
 
 # PDIR: Criar PR
@@ -13,9 +13,21 @@ Cria Pull Request vinculado a uma Issue.
 
 ## Processar $ARGUMENTS
 
-Extrair número da Issue de `$ARGUMENTS` (ex: `42` ou `#42`).
+**Fluxo principal (sem argumento):** extrair número da Issue do nome da branch atual. O formato esperado é `tipo/numero-slug` (ex: `feat/42-login` → Issue `#42`). Extrair o primeiro número encontrado após a `/`.
 
-Se `$ARGUMENTS` vazio, tentar extrair do nome da branch (ex: `feat/42-login` → Issue `#42`). Se não conseguir, perguntar ao usuário.
+**Fluxo alternativo (com argumento):** usar número da Issue de `$ARGUMENTS` (ex: `42` ou `#42`).
+
+Se não conseguir extrair de nenhuma forma, perguntar ao usuário.
+
+## Formato
+
+```bash
+# Fluxo principal: extrai Issue da branch automaticamente
+/pdir-criar-pr
+
+# Alternativo: número explícito
+/pdir-criar-pr 42
+```
 
 ## Instruções
 
@@ -41,6 +53,8 @@ Se não tem upstream:
 git push -u origin "$(git branch --show-current)"
 ```
 
+Se tem upstream mas há commits locais não enviados (`git log @{u}..HEAD --oneline`), fazer `git push`.
+
 ### 3. Buscar Issue e Analisar Branch
 
 ```bash
@@ -50,12 +64,16 @@ git log "$DEFAULT_BRANCH"..HEAD --oneline
 git diff "$DEFAULT_BRANCH" --stat
 ```
 
-Derivar `type` do prefixo da branch (ex: `feat/` → `feat`, `fix/` → `fix`). Derivar título e resumo a partir da Issue e dos commits.
+Se a Issue não existir: informar erro com o número tentado e perguntar ao usuário o número correto.
+
+Derivar `type` do prefixo da branch (ex: `feat/` → `feat`, `fix/` → `fix`). Derivar `scope` do título da Issue ou da área principal dos arquivos modificados. Derivar título e resumo a partir da Issue e dos commits.
 
 ### 4. Criar Pull Request
 
 ```bash
+DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
 gh pr create \
+  --base "$DEFAULT_BRANCH" \
   --title "type(scope): descrição derivada da Issue" \
   --body "$(cat <<'EOF'
 Closes #[número-da-issue]
