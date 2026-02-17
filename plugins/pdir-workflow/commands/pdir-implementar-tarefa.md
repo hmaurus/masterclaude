@@ -52,21 +52,30 @@ Slug: palavras-chave do título em kebab-case, sem acentos, max 50 chars.
 
 Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
 
-### 4. Implementar
+### 4. Planejar Implementação
 
-Planejar e implementar a tarefa descrita na Issue:
+**Entrar no modo de planejamento** (usar `EnterPlanMode`) para desenhar o plano de implementação antes de escrever código. No plano:
+- Listar arquivos a criar/modificar
+- Descrever a abordagem técnica e decisões arquiteturais
+- Identificar dependências e ordem de execução
+- Considerar testes para lógica nova ou alterada
+
+Aguardar aprovação do usuário antes de prosseguir.
+
+### 5. Implementar
+
+Executar o plano aprovado:
 - Seguir convenções do projeto (CLAUDE.md)
 - Implementar de forma incremental
 - Esclarecer dúvidas com o usuário antes de assumir
-- Considerar testes para lógica nova ou alterada
 
-### 5. Validar
+### 6. Validar
 
 Executar os checks do projeto (lint, type-check, testes). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
 
 Se algum check falhar, corrigir antes de prosseguir.
 
-### 6. Documentar na Issue
+### 7. Documentar na Issue
 
 ```bash
 gh issue comment [número] --body "$(cat <<'EOF'
@@ -81,7 +90,7 @@ EOF
 )"
 ```
 
-### 7. Feedback Final
+### 8. Feedback Final
 
 ```
 Tarefa implementada!
