@@ -1,10 +1,12 @@
 ---
-description: Commit e push na branch atual (suporta WIP e Conventional Commits)
+description: Commit e push na branch atual com Conventional Commits (feat, fix, wip, refactor, etc.) — sincroniza, commita e envia para origin
 ---
 
 # PDIR: Commit
 
 Sincroniza, commita e envia mudanças para origin.
+
+**Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
 ## Instruções
 
@@ -15,8 +17,8 @@ git status -sb
 git diff --stat
 ```
 
-- `## branch...origin/branch` (tem upstream) → `git pull --ff-only`
-- `## branch` (sem `...`) → branch nova, pular pull
+- Tem upstream (`## branch...origin/branch`) → `git pull --ff-only`
+- Branch nova (`## branch` sem `...`) → pular pull
 - Sem mudanças → informar e encerrar
 
 ### 2. Criar Commit
@@ -26,6 +28,8 @@ Formato: `type(scope): descrição`
 Types: `wip`, `feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`, `perf`, `ci`, `build`
 
 Scope: área afetada — **obrigatório**
+
+Staging: adicionar apenas arquivos relacionados ao commit. Se houver mudanças não-relacionadas, perguntar ao usuário quais incluir.
 
 ```bash
 git add [arquivos específicos]

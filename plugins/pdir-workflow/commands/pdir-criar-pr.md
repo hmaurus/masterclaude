@@ -1,5 +1,5 @@
 ---
-description: Cria Pull Request para a branch atual
+description: Cria Pull Request vinculado a uma Issue do GitHub. Verifica estado da branch, faz push se necessário, busca dados da Issue e gera PR com Conventional Commits
 argument-hint: <número-da-issue>
 ---
 
@@ -9,34 +9,47 @@ Cria Pull Request vinculado a uma Issue.
 
 **Pré-requisitos:** estar em branch de feature (não main), commits já realizados (`/pdir-commit`).
 
+**Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
+
+## Processar $ARGUMENTS
+
+Extrair número da Issue de `$ARGUMENTS` (ex: `42` ou `#42`).
+
+Se `$ARGUMENTS` vazio, tentar extrair do nome da branch (ex: `feat/42-login` → Issue `#42`). Se não conseguir, perguntar ao usuário.
+
 ## Instruções
 
 ### 1. Verificar Estado
 
 ```bash
 git branch --show-current
-git status
+git status -sb
 ```
 
 Se estiver na main: informar erro e encerrar.
+Se houver mudanças não commitadas: informar e sugerir `/pdir-commit` primeiro.
 
 ### 2. Push (se necessário)
 
-Verificar se branch já tem upstream. Se não:
+```bash
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null
+```
+
+Se não tem upstream:
 
 ```bash
 git push -u origin "$(git branch --show-current)"
 ```
 
-### 3. Buscar Issue
-
-`$ARGUMENTS`: número da Issue (ex: `42` ou `#42`).
+### 3. Buscar Issue e Analisar Branch
 
 ```bash
-gh issue view $ARGUMENTS --json number,title,body
+gh issue view [número] --json number,title,body
+git log main..HEAD --oneline
+git diff main --stat
 ```
 
-Derivar título do PR a partir do título da Issue.
+Derivar `type` do prefixo da branch (ex: `feat/` → `feat`, `fix/` → `fix`). Derivar título e resumo a partir da Issue e dos commits.
 
 ### 4. Criar Pull Request
 
@@ -48,7 +61,7 @@ Closes #[número-da-issue]
 
 ## Resumo
 
-[Breve resumo do que foi implementado]
+[Breve resumo derivado da Issue e dos commits]
 
 ## Mudanças Principais
 
@@ -65,8 +78,9 @@ EOF
 ```
 PR criado!
 
-Branch: [branch]
 PR: #[número-do-pr]
+Branch: [branch]
+Link: [url]
 
 Próximos passos:
 - /pdir-merge-tarefa (quando aprovado)

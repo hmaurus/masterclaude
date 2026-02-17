@@ -1,5 +1,5 @@
 ---
-description: Valida, faz squash merge do PR e limpa branch
+description: Finaliza tarefa fazendo squash merge do PR, deletando branch e sincronizando local. Usar quando o PR está aprovado e pronto para merge
 argument-hint: [numero-do-pr]
 ---
 
@@ -7,48 +7,49 @@ argument-hint: [numero-do-pr]
 
 Valida, faz merge do PR e limpa branch local/remota.
 
-## Entrada
+**Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
+
+## Processar $ARGUMENTS
 
 `$ARGUMENTS` (opcional): número do PR. Se não fornecido, usa PR da branch atual.
 
 ## Instruções
 
-### 1. Pre-Review (Opcional)
-
-Se disponível, considerar executar `/code-review` antes do merge.
-
-### 2. Validação Final
+### 1. Validação Local
 
 Executar os checks do projeto (lint, type-check, build). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
 
-### 3. Verificar CI
+Se algum check falhar, parar e informar ao usuário.
+
+### 2. Verificar CI
 
 ```bash
 gh pr checks $ARGUMENTS
 ```
 
-Se houver checks falhando, informar ao usuário antes de prosseguir.
+Se houver checks falhando, parar e perguntar ao usuário se deseja aguardar, prosseguir mesmo assim, ou abortar.
 
-### 4. Fazer Merge
+### 3. Fazer Merge
 
 ```bash
 gh pr merge $ARGUMENTS --squash --delete-branch
 ```
 
-### 5. Sincronizar Local
+### 4. Sincronizar Local
 
 ```bash
-git checkout main
-git pull origin main
+DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
+git checkout "$DEFAULT_BRANCH"
+git pull origin "$DEFAULT_BRANCH"
 ```
 
-### 6. Feedback Final
+### 5. Feedback Final
 
 ```
 Merge realizado!
 
-PR: #[número] → main
-Branch deletada
+PR: #[número] → [branch-default] (squash merge)
+Branch deletada (local + remota)
 
 Tarefa concluída!
 

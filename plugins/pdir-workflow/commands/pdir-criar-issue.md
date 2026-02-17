@@ -1,11 +1,19 @@
 ---
-description: Cria Issue no GitHub a partir de arquivo de tarefas ou descrição livre
-argument-hint: <arquivo>#<trecho do título> | <descrição livre>
+description: Cria Issue no GitHub com labels e milestone inferidos, a partir de arquivo de tarefas (gerado por /pdir-dividir-em-tarefas) ou descrição livre
+argument-hint: <arquivo>#<trecho do título> ou <descrição livre>
 ---
 
 # PDIR: Criar Issue
 
 Cria uma Issue no GitHub a partir de `$ARGUMENTS`.
+
+**Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
+
+## Processar $ARGUMENTS
+
+**Se contém `#`** → separar em `arquivo` (antes do `#`) e `trecho` (após o `#`).
+
+**Caso contrário** → tratar como descrição livre.
 
 ## Formato
 
@@ -21,18 +29,29 @@ Cria uma Issue no GitHub a partir de `$ARGUMENTS`.
 
 ### 1. Extrair Conteúdo
 
-**Se `$ARGUMENTS` contém `#`** → ler arquivo, buscar linha que contenha o trecho após `#` (busca parcial, case-insensitive). Extrair título, descrição e contexto da seção onde a tarefa se encontra.
+**Se referência a arquivo** → ler arquivo, buscar linha que contenha o trecho (busca parcial, case-insensitive). Extrair título, descrição e contexto da seção.
 
-**Caso contrário** → usar `$ARGUMENTS` como descrição livre. Formatar título como `type(scope): descrição curta`.
+**Se descrição livre** → formatar título como `type(scope): descrição curta`.
 
-### 2. Criar Issue
+### 2. Buscar Labels e Milestones Existentes
+
+```bash
+gh label list --limit 100
+gh api repos/{owner}/{repo}/milestones
+```
+
+**Labels:** inferir do título: `feat`→`enhancement`, `fix`→`bug`, `docs`→`documentation`, `chore`→`chore`, `refactor`→`refactor`, `test`→`test`. Área: `area:{scope}`. Usar apenas labels que já existem. Não criar labels.
+
+**Milestone:** usar milestone existente que melhor se encaixe. Não criar milestones. Omitir `--milestone` se nenhum existir.
+
+### 3. Criar Issue
 
 Body deve ser breve — o planejamento detalhado será feito em `/pdir-implementar-tarefa`.
 
 ```bash
 gh issue create \
   --title "type(scope): descrição" \
-  --label "labels" \
+  --label "label1" --label "label2" \
   --milestone "milestone" \
   --body "$(cat <<'EOF'
 ## Descrição
@@ -45,16 +64,6 @@ gh issue create \
 EOF
 )"
 ```
-
-### Labels
-
-Inferir do título: `feat`→`enhancement`, `fix`→`bug`, `docs`→`documentation`, `chore`→`chore`, `refactor`→`refactor`, `test`→`test`. Área: `area:{scope}`.
-
-Usar apenas labels que já existem no repositório (`gh label list --limit 100`). Não criar labels automaticamente.
-
-### Milestone
-
-Usar milestone existente que melhor se encaixe (`gh api repos/{owner}/{repo}/milestones`). Não criar milestones automaticamente. Omitir `--milestone` se nenhum existir.
 
 ## Feedback Final
 

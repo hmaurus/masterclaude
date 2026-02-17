@@ -1,11 +1,13 @@
 ---
-description: Divide PRD ou outro documento em tarefas atômicas
-argument-hint: <arquivo>#<seção> [skills: skill1, skill2] | <descrição livre> [skills: skill1, skill2]
+description: Divide PRD, documento de requisitos ou descrição livre em tarefas atômicas para implementação. Gera arquivo em docs/projeto/tarefas/
+argument-hint: <arquivo>#<seção> [skills: skill1, skill2] ou <descrição livre> [skills: skill1, skill2]
 ---
 
 # PDIR: Dividir em Tarefas
 
 Divide um documento ou descrição em tarefas atômicas para implementação por AI Code Assistants.
+
+**Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
 ## Processar $ARGUMENTS
 
@@ -25,7 +27,7 @@ Extrair do `$ARGUMENTS`:
 
 ### 1. Identificar Escopo
 
-**Se contém `#`** → ler arquivo, buscar seção que contenha o trecho após `#`, extrair conteúdo dessa seção como escopo.
+**Se contém `#`** → ler arquivo, buscar seção que contenha o trecho após `#` (busca parcial, case-insensitive), extrair conteúdo dessa seção como escopo.
 
 **Se contém nome de arquivo (sem `#`)** → ler arquivo completo como escopo.
 
@@ -39,7 +41,7 @@ Cada tarefa deve ser:
 - **Testável:** critérios claros de conclusão
 - **Independente:** mínimas dependências entre tarefas
 
-Ordenar por dependência: infra/config → modelos/types → lógica de negócio → API → UI → testes.
+Ordenar por dependência: infra/config → modelos/types → lógica de negócio → API → UI → testes de integração/E2E.
 
 ### 3. Gerar Arquivo
 
