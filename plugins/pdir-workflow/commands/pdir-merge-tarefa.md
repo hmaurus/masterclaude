@@ -56,5 +56,5 @@ Branch deletada (local + remota)
 Tarefa concluída!
 
 Próximos passos:
-- /pdir-implementar-tarefa [próxima-issue] (se houver mais tarefas)
+- /pdir-implementar-tarefa-com-branch [próxima-issue] (se houver mais tarefas)
 ```

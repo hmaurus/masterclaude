@@ -1,11 +1,11 @@
 ---
-description: Implementa tarefa a partir de Issue existente do GitHub direto na branch atual, sem criar branch separada
+description: Implementa tarefa a partir de Issue existente do GitHub com branch separada. Busca Issue, analisa projeto, cria branch, implementa, valida e documenta
 argument-hint: <número-issue> [skills: skill1, skill2, ...]
 ---
 
-# PDIR: Implementar Tarefa (sem branch)
+# PDIR: Implementar Tarefa (com branch)
 
-Implementa uma tarefa a partir de uma Issue do GitHub, direto na branch atual.
+Implementa uma tarefa a partir de uma Issue do GitHub, criando branch separada.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
@@ -19,7 +19,21 @@ Se skills foram passadas, carregá-las **obrigatoriamente** antes de prosseguir.
 
 ## Instruções
 
-### 1. Verificar Estado do Repositório
+### 1. Buscar Issue
+
+```bash
+gh issue view [número] --json number,title,body
+```
+
+Se não existir: informar para criar usando `/pdir-criar-issue`.
+
+### 2. Analisar Projeto
+
+Ler CLAUDE.md, README.md e arquivos relacionados à tarefa. Identificar padrões, convenções e estrutura do codebase existente.
+
+### 3. Criar Branch
+
+Verificar estado atual:
 
 ```bash
 git status -sb
@@ -28,17 +42,15 @@ git branch --show-current
 
 Se houver mudanças pendentes, informar ao usuário antes de prosseguir.
 
-### 2. Buscar Issue
+Derivar `tipo` do título da Issue: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`.
 
 ```bash
-gh issue view [número] --json number,title,body
+git checkout -b [tipo]/[número]-[slug]
 ```
 
-Se não existir: informar para criar usando `/pdir-criar-issue`.
+Slug: palavras-chave do título em kebab-case, sem acentos, max 50 chars.
 
-### 3. Analisar Projeto
-
-Ler CLAUDE.md, README.md e arquivos relacionados à tarefa. Identificar padrões, convenções e estrutura do codebase existente.
+Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
 
 ### 4. Planejar Implementação
 
@@ -84,10 +96,11 @@ EOF
 Tarefa implementada!
 
 Issue: #[número] - [título]
-Branch atual: [branch]
+Branch: [branch]
 
 Próximos passos:
 - /pdir-commit
+- /pdir-criar-pr [número-issue] (se implementação completa)
 
-Dica: para implementar com branch separada, use /pdir-implementar-tarefa.
+Dica: execute /clear antes do próximo /pdir-implementar-tarefa-com-branch para contexto limpo.
 ```

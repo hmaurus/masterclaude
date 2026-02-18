@@ -1,11 +1,11 @@
 ---
-description: Implementa tarefa a partir de Issue existente do GitHub. Busca Issue, analisa projeto, cria branch, implementa, valida e documenta
+description: Implementa tarefa a partir de Issue existente do GitHub direto na branch atual
 argument-hint: <número-issue> [skills: skill1, skill2, ...]
 ---
 
 # PDIR: Implementar Tarefa
 
-Implementa uma tarefa a partir de uma Issue do GitHub.
+Implementa uma tarefa a partir de uma Issue do GitHub, direto na branch atual.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
@@ -19,21 +19,7 @@ Se skills foram passadas, carregá-las **obrigatoriamente** antes de prosseguir.
 
 ## Instruções
 
-### 1. Buscar Issue
-
-```bash
-gh issue view [número] --json number,title,body
-```
-
-Se não existir: informar para criar usando `/pdir-criar-issue`.
-
-### 2. Analisar Projeto
-
-Ler CLAUDE.md, README.md e arquivos relacionados à tarefa. Identificar padrões, convenções e estrutura do codebase existente.
-
-### 3. Criar Branch
-
-Verificar estado atual:
+### 1. Verificar Estado do Repositório
 
 ```bash
 git status -sb
@@ -42,15 +28,17 @@ git branch --show-current
 
 Se houver mudanças pendentes, informar ao usuário antes de prosseguir.
 
-Derivar `tipo` do título da Issue: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`.
+### 2. Buscar Issue
 
 ```bash
-git checkout -b [tipo]/[número]-[slug]
+gh issue view [número] --json number,title,body
 ```
 
-Slug: palavras-chave do título em kebab-case, sem acentos, max 50 chars.
+Se não existir: informar para criar usando `/pdir-criar-issue`.
 
-Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
+### 3. Analisar Projeto
+
+Ler CLAUDE.md, README.md e arquivos relacionados à tarefa. Identificar padrões, convenções e estrutura do codebase existente.
 
 ### 4. Planejar Implementação
 
@@ -90,17 +78,27 @@ EOF
 )"
 ```
 
-### 8. Feedback Final
+### 8. Fechar Issue
+
+Perguntar ao usuário se deseja fechar a issue agora.
+
+Se sim:
+```bash
+gh issue close [número] --comment "Fechada via implementação direta (sem PR)."
+```
+
+Se não: informar que a issue permanece aberta.
+
+### 9. Feedback Final
 
 ```
 Tarefa implementada!
 
 Issue: #[número] - [título]
-Branch: [branch]
+Branch atual: [branch]
 
 Próximos passos:
 - /pdir-commit
-- /pdir-criar-pr [número-issue] (se implementação completa)
 
-Dica: execute /clear antes do próximo /pdir-implementar-tarefa para contexto limpo.
+Dica: para implementar com branch separada, use /pdir-implementar-tarefa-com-branch.
 ```
