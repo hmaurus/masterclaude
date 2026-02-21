@@ -13,6 +13,7 @@ Método **PDIR** (Planejar, Dividir, Implementar, Revisar) para desenvolvimento 
 |---------|-----------|
 | `/pdir-dividir-em-tarefas` | Divide PRD ou documento em tarefas atômicas |
 | `/pdir-criar-issue` | Cria Issue no GitHub a partir de tarefas ou descrição livre |
+| `/pdir-proxima-tarefa` | Sugere próxima tarefa com base no contexto atual e projeto |
 | `/pdir-implementar-tarefa` | Implementa tarefa direto na branch atual |
 | `/pdir-implementar-tarefa-com-branch` | Implementa tarefa com branch separada |
 | `/pdir-commit` | Commit e push com Conventional Commits |
