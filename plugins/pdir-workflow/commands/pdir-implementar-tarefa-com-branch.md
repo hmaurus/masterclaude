@@ -60,6 +60,11 @@ Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
 - Identificar dependências e ordem de execução
 - Considerar testes para lógica nova ou alterada
 
+**IMPORTANTE — Passos pós-implementação no plano:** O plan mode pode limpar o contexto da conversa ao iniciar a execução. Para garantir que nenhum passo seja perdido, o plano **deve incluir obrigatoriamente** as seguintes etapas finais:
+- Validar (lint, type-check, testes)
+- Documentar na Issue (`gh issue comment [número]` com resumo da implementação)
+- Exibir feedback final com número da issue, branch e próximos passos (`/pdir-commit`, `/pdir-criar-pr`)
+
 Aguardar aprovação do usuário antes de prosseguir.
 
 ### 5. Implementar
