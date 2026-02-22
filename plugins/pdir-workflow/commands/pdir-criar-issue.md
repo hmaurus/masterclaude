@@ -86,6 +86,25 @@ EOF
 )"
 ```
 
+### 4. Atualizar Checklist do PRD
+
+Verificar se existe `docs/projeto/PRD.md`. Se não existir, pular este passo silenciosamente.
+
+Se existir:
+
+```bash
+# Listar issues fechadas para cruzar com checklist
+gh issue list --state closed --limit 50 --json number,title
+```
+
+Ler o PRD e identificar linhas de checklist (`- [ ]`, `- [x]`, `- ✅`). Para cada item `- [ ]` (pendente), verificar se existe uma issue fechada cujo título corresponda ao item (match parcial, case-insensitive). Se corresponder, marcar como `- [x]` no PRD.
+
+**Regras:**
+- Não alterar itens já marcados (`- [x]`, `✅`)
+- Incluir a issue recém-criada neste passo **não** altera nada (ela acabou de ser aberta, não fechada)
+- Se nenhum item for atualizado, não modificar o arquivo
+- Se itens forem atualizados, salvar o PRD e informar no feedback
+
 ## Feedback Final
 
 ```
@@ -95,6 +114,7 @@ Issue: #[número] - [título]
 Link: [url]
 Labels: [labels]
 Milestone: [milestone] (se aplicável)
+PRD: [X itens atualizados em docs/projeto/PRD.md | não encontrado | sem alterações]
 
 Próximos passos:
 - /pdir-implementar-tarefa [número]
