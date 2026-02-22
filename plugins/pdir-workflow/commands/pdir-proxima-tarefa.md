@@ -89,11 +89,13 @@ Usar `AskUserQuestion` para confirmar a sugestão:
 
 ### 6. Criar Issue via `/pdir-criar-issue`
 
-**Se o usuário concordou** → executar `/pdir-criar-issue [título sugerido]`
+> **IMPORTANTE:** Usar o `Skill tool` para invocar `/pdir-criar-issue`. NÃO criar a issue manualmente via `gh issue create` — o skill `/pdir-criar-issue` tem seu próprio workflow (labels, milestone, atualização do PRD) que seria perdido.
 
-**Se escolheu alternativa** → executar `/pdir-criar-issue [título da alternativa escolhida]`
+**Se o usuário concordou** → invocar Skill `/pdir-criar-issue` com argumento `[título sugerido]`
 
-**Se indicou outra tarefa** → executar `/pdir-criar-issue [descrição fornecida pelo usuário]`
+**Se escolheu alternativa** → invocar Skill `/pdir-criar-issue` com argumento `[título da alternativa escolhida]`
+
+**Se indicou outra tarefa** → invocar Skill `/pdir-criar-issue` com argumento `[descrição fornecida pelo usuário]`
 
 O `/pdir-criar-issue` cuidará de toda a lógica de labels, milestone e criação da Issue.
 
