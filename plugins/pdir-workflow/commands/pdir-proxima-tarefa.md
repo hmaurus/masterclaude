@@ -41,7 +41,7 @@ Este resumo será usado para inferir dependências e prioridades da próxima tar
 
 **Se não** → usar `docs/projeto/PRD.md`.
 
-Se o arquivo existir, ler e buscar seções que contenham etapas, fases, roadmap, checklist ou lista de tarefas. Identificar:
+Se o arquivo existir, ler e buscar seções que contenham etapas, fases, roadmap, progresso de implementação, checklist ou lista de tarefas. Identificar:
 - Tarefas já concluídas (marcadas com ✅, [x], ou similar)
 - Tarefas pendentes
 - Ordem de prioridade/dependência
