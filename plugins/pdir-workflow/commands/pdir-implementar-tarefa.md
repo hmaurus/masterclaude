@@ -1,6 +1,6 @@
 ---
 description: Implementa tarefa a partir de Issue existente do GitHub direto na branch atual
-argument-hint: <número-issue> [skills: skill1, skill2, ...]
+argument-hint: "<número-issue> [skills: skill1, skill2, ...]"
 ---
 
 # PDIR: Implementar Tarefa

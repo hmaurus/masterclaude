@@ -1,6 +1,6 @@
 ---
 description: Cria Issue no GitHub com labels (cria automaticamente se não existirem) e milestone inferidos, a partir de arquivo de tarefas (gerado por /pdir-dividir-em-tarefas) ou descrição livre
-argument-hint: <arquivo>#<trecho do título> ou <descrição livre>
+argument-hint: "<arquivo>#<trecho do título> ou <descrição livre>"
 ---
 
 # PDIR: Criar Issue

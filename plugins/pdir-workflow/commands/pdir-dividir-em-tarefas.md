@@ -1,6 +1,6 @@
 ---
 description: Divide PRD, documento de requisitos ou descrição livre em tarefas atômicas para implementação. Gera arquivo em docs/projeto/tarefas/
-argument-hint: <arquivo>#<seção> [skills: skill1, skill2] ou <descrição livre> [skills: skill1, skill2]
+argument-hint: "<arquivo>#<seção> [skills: skill1, skill2] ou <descrição livre> [skills: skill1, skill2]"
 ---
 
 # PDIR: Dividir em Tarefas

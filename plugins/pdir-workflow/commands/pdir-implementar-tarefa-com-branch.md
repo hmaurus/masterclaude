@@ -1,6 +1,6 @@
 ---
 description: Implementa tarefa a partir de Issue existente do GitHub com branch separada. Busca Issue, analisa projeto, cria branch, implementa, valida e documenta
-argument-hint: <número-issue> [skills: skill1, skill2, ...]
+argument-hint: "<número-issue> [skills: skill1, skill2, ...]"
 ---
 
 # PDIR: Implementar Tarefa (com branch)
