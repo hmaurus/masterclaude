@@ -31,8 +31,10 @@ Se houver mudanças pendentes, informar ao usuário antes de prosseguir.
 ### 2. Buscar Issue
 
 ```bash
-gh issue view [número] --json number,title,body
+gh issue view [número] --json number,title,body,comments
 ```
+
+Analisar o body **e todos os comentários** — comentários frequentemente contêm decisões, esclarecimentos e requisitos adicionais.
 
 Se não existir: informar para criar usando `/pdir-criar-issue`.
 
