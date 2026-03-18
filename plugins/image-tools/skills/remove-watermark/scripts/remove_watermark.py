@@ -3,7 +3,7 @@
 Remove marcas d'água de imagens (especialmente de geradores de IA).
 Usa OpenCV inpainting para preencher a região da marca d'água com o conteúdo ao redor.
 
-Sem argumento de saída, renomeia a original para _cmd (com marca d'água) e salva a
+Sem argumento de saída, renomeia a original para _original (com marca d'água) e salva a
 imagem limpa com o nome original.
 
 Uso:
@@ -25,9 +25,9 @@ import numpy as np
 def resolve_output_path(input_path: str) -> str:
     """Resolve caminho de saída quando não especificado.
 
-    Renomeia a imagem original para nome_cmd.ext (cmd = com marca d'água)
+    Renomeia a imagem original para nome_original.ext (cmd = com marca d'água)
     e retorna o caminho original para salvar a imagem limpa.
-    Se o arquivo já contém _cmd no nome, não adiciona novamente.
+    Se o arquivo já contém _original no nome, não adiciona novamente.
 
     @param input_path: caminho da imagem de entrada
     @returns: caminho onde salvar a imagem limpa
@@ -36,14 +36,14 @@ def resolve_output_path(input_path: str) -> str:
     stem = p.stem
     suffix = p.suffix
 
-    # Se já tem _cmd, a original com marca d'água já foi preservada antes
-    if stem.endswith("_cmd"):
-        # Saída é o nome sem _cmd
+    # Se já tem _original, a original com marca d'água já foi preservada antes
+    if stem.endswith("_original"):
+        # Saída é o nome sem _original
         clean_name = stem[:-4] + suffix
         return str(p.parent / clean_name)
 
-    # Renomear original para _cmd
-    cmd_path = p.parent / f"{stem}_cmd{suffix}"
+    # Renomear original para _original
+    cmd_path = p.parent / f"{stem}_original{suffix}"
     p.rename(cmd_path)
     print(f"Original renomeada: {cmd_path}")
 
@@ -72,11 +72,11 @@ def remove_watermark(
     @param rect: região manual "x1,y1,x2,y2" (ignora corner/size_pct)
     @param feather: suavização da borda da máscara (evita corte abrupto)
     """
-    # Se o arquivo original foi renomeado para _cmd (resolve_output_path),
-    # ler a partir do arquivo _cmd
+    # Se o arquivo original foi renomeado para _original (resolve_output_path),
+    # ler a partir do arquivo _original
     read_path = Path(input_path)
     if not read_path.exists():
-        cmd_candidate = read_path.parent / f"{read_path.stem}_cmd{read_path.suffix}"
+        cmd_candidate = read_path.parent / f"{read_path.stem}_original{read_path.suffix}"
         if cmd_candidate.exists():
             read_path = cmd_candidate
 
@@ -176,7 +176,7 @@ def main():
     parser.add_argument("input", help="Imagem ou pasta de entrada")
     parser.add_argument("output", nargs="?", default=None,
                         help="Imagem ou pasta de saída (opcional: sem informar, "
-                             "renomeia original para _cmd e salva limpa no nome original)")
+                             "renomeia original para _original e salva limpa no nome original)")
     parser.add_argument(
         "-c", "--corner", default="br",
         choices=["br", "bl", "tr", "tl"],

@@ -31,10 +31,10 @@ O script fica em `${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_w
 
 ### Imagem única (saída automática — padrão)
 
-Sem argumento de saída, o script renomeia a original para `_cmd` (com marca d'água) e salva a imagem limpa com o nome original:
+Sem argumento de saída, o script renomeia a original para `_original` (com marca d'água) e salva a imagem limpa com o nome original:
 
 ```bash
-# foto.png → foto_cmd.png (original) + foto.png (limpa)
+# foto.png → foto_original.png (original) + foto.png (limpa)
 ~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png
 ```
 
@@ -79,7 +79,7 @@ Quando a marca d'água não está no canto ou tem posição irregular:
 # Com pasta de saída separada
 ~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py pasta_entrada/ pasta_saida/
 
-# In-place (renomeia originais para _cmd, salva limpas no nome original)
+# In-place (renomeia originais para _original, salva limpas no nome original)
 ~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py pasta/
 ```
 

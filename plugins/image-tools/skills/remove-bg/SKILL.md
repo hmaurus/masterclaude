@@ -19,8 +19,6 @@ test -f ~/venvs/rembg/bin/rembg && ~/venvs/rembg/bin/rembg --version || echo "PR
 
 ### Instalar (se necessário)
 
-Executar o script de setup:
-
 ```bash
 bash ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/setup.sh
 ```
@@ -29,38 +27,46 @@ Na primeira execução do rembg, o modelo U²-Net (~170MB) é baixado automatica
 
 ## Uso
 
-### Imagem única
+O script wrapper fica em `${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py`.
+
+### Imagem única (saída automática — padrão)
+
+Sem argumento de saída, renomeia a original para `_original` e salva a imagem sem fundo com o nome original:
 
 ```bash
-~/venvs/rembg/bin/rembg i <entrada> <saida>
+# foto.png → foto_original.png (com fundo) + foto.png (sem fundo)
+~/venvs/rembg/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py foto.png
 ```
 
-### Pasta inteira (batch)
+### Com saída explícita
 
 ```bash
-~/venvs/rembg/bin/rembg p <pasta-entrada>/ <pasta-saida>/
+~/venvs/rembg/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py entrada.png saida.png
 ```
 
-### Exemplos
+### Com modelo para pessoas
 
 ```bash
-# PNG → PNG
-~/venvs/rembg/bin/rembg i foto.png foto-sem-fundo.png
-
-# JPG → PNG com transparência
-~/venvs/rembg/bin/rembg i foto.jpg foto-sem-fundo.png
-
-# Batch: todas as imagens de uma pasta
-~/venvs/rembg/bin/rembg p originais/ sem-fundo/
-
-# Com modelo específico para pessoas
-~/venvs/rembg/bin/rembg i -m u2net_human_seg retrato.jpg retrato-sem-fundo.png
-
-# Com alpha matting (bordas mais suaves)
-~/venvs/rembg/bin/rembg i -a -ae 10 -ab 10 foto.png foto-suave.png
+~/venvs/rembg/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py retrato.jpg -m u2net_human_seg
 ```
 
-## Opções úteis
+### Com alpha matting (bordas mais suaves)
+
+```bash
+~/venvs/rembg/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py foto.png -a -ae 10 -ab 10
+```
+
+### Batch (pasta inteira)
+
+```bash
+# Com pasta de saída separada
+~/venvs/rembg/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py pasta_entrada/ pasta_saida/
+
+# In-place (renomeia originais para _original, salva limpas no nome original)
+~/venvs/rembg/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-bg/scripts/remove_bg.py pasta/
+```
+
+## Opções
 
 | Flag | Descrição |
 |------|-----------|
@@ -78,20 +84,18 @@ Na primeira execução do rembg, o modelo U²-Net (~170MB) é baixado automatica
 | `isnet-general-use` | Objetos variados |
 | `silueta` | Leve e rápido |
 
-Trocar modelo: adicionar `-m <nome>` ao comando.
-
 ## Fluxo de trabalho
 
 1. Verificar se `~/venvs/rembg/bin/rembg` existe
 2. Se não existir, rodar o script de setup
 3. Identificar arquivo(s) de entrada do usuário
 4. Escolher modelo adequado (pessoas → `u2net_human_seg`, geral → `u2net`)
-5. Executar rembg
+5. Executar o script wrapper
 6. Confirmar resultado ao usuário
 
 ## Notas
 
 - Saída sempre em PNG para suportar transparência
-- Se a entrada for JPG/JPEG, a saída deve ser `.png`
+- Se a entrada for JPG/JPEG, a saída será `.png`
 - Sugerir `u2net_human_seg` quando a imagem contém pessoas
 - Para bordas mais suaves (cabelo, pelos), sugerir alpha matting (`-a`)
