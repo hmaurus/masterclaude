@@ -3,11 +3,15 @@
 Remove marcas d'água de imagens (especialmente de geradores de IA).
 Usa OpenCV inpainting para preencher a região da marca d'água com o conteúdo ao redor.
 
+Sem argumento de saída, renomeia a original para _cmd (com marca d'água) e salva a
+imagem limpa com o nome original.
+
 Uso:
+  python remove_watermark.py entrada.png
+  python remove_watermark.py entrada.png -c br -s 8
   python remove_watermark.py entrada.png saida.png
-  python remove_watermark.py entrada.png saida.png -c br -s 8
-  python remove_watermark.py entrada.png saida.png --rect 700,450,800,500
-  python remove_watermark.py pasta_entrada/ pasta_saida/
+  python remove_watermark.py entrada.png --rect 700,450,800,500
+  python remove_watermark.py pasta_entrada/
 """
 
 import argparse
@@ -16,6 +20,35 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+
+
+def resolve_output_path(input_path: str) -> str:
+    """Resolve caminho de saída quando não especificado.
+
+    Renomeia a imagem original para nome_cmd.ext (cmd = com marca d'água)
+    e retorna o caminho original para salvar a imagem limpa.
+    Se o arquivo já contém _cmd no nome, não adiciona novamente.
+
+    @param input_path: caminho da imagem de entrada
+    @returns: caminho onde salvar a imagem limpa
+    """
+    p = Path(input_path)
+    stem = p.stem
+    suffix = p.suffix
+
+    # Se já tem _cmd, a original com marca d'água já foi preservada antes
+    if stem.endswith("_cmd"):
+        # Saída é o nome sem _cmd
+        clean_name = stem[:-4] + suffix
+        return str(p.parent / clean_name)
+
+    # Renomear original para _cmd
+    cmd_path = p.parent / f"{stem}_cmd{suffix}"
+    p.rename(cmd_path)
+    print(f"Original renomeada: {cmd_path}")
+
+    # A imagem limpa fica com o nome original
+    return str(input_path)
 
 
 def remove_watermark(
@@ -39,9 +72,17 @@ def remove_watermark(
     @param rect: região manual "x1,y1,x2,y2" (ignora corner/size_pct)
     @param feather: suavização da borda da máscara (evita corte abrupto)
     """
-    img = cv2.imread(str(input_path), cv2.IMREAD_UNCHANGED)
+    # Se o arquivo original foi renomeado para _cmd (resolve_output_path),
+    # ler a partir do arquivo _cmd
+    read_path = Path(input_path)
+    if not read_path.exists():
+        cmd_candidate = read_path.parent / f"{read_path.stem}_cmd{read_path.suffix}"
+        if cmd_candidate.exists():
+            read_path = cmd_candidate
+
+    img = cv2.imread(str(read_path), cv2.IMREAD_UNCHANGED)
     if img is None:
-        print(f"Erro: não foi possível abrir '{input_path}'", file=sys.stderr)
+        print(f"Erro: não foi possível abrir '{read_path}'", file=sys.stderr)
         sys.exit(1)
 
     h, w = img.shape[:2]
@@ -116,10 +157,14 @@ def process_batch(input_dir: str, output_dir: str, **kwargs) -> None:
         print(f"Nenhuma imagem encontrada em '{input_dir}'", file=sys.stderr)
         sys.exit(1)
 
+    in_place = input_path == output_path
     print(f"Processando {len(images)} imagens...")
     for img_file in sorted(images):
-        out_file = output_path / img_file.name
-        remove_watermark(str(img_file), str(out_file), **kwargs)
+        if in_place:
+            out_file = resolve_output_path(str(img_file))
+        else:
+            out_file = str(output_path / img_file.name)
+        remove_watermark(str(img_file), out_file, **kwargs)
 
     print(f"Concluído: {len(images)} imagens processadas em '{output_dir}'")
 
@@ -129,7 +174,9 @@ def main():
         description="Remove marca d'água de imagens de geradores de IA"
     )
     parser.add_argument("input", help="Imagem ou pasta de entrada")
-    parser.add_argument("output", help="Imagem ou pasta de saída")
+    parser.add_argument("output", nargs="?", default=None,
+                        help="Imagem ou pasta de saída (opcional: sem informar, "
+                             "renomeia original para _cmd e salva limpa no nome original)")
     parser.add_argument(
         "-c", "--corner", default="br",
         choices=["br", "bl", "tr", "tl"],
@@ -170,9 +217,11 @@ def main():
     )
 
     if input_path.is_dir():
-        process_batch(args.input, args.output, **kwargs)
+        output_dir = args.output or str(input_path)
+        process_batch(args.input, output_dir, **kwargs)
     else:
-        remove_watermark(args.input, args.output, **kwargs)
+        output = args.output or resolve_output_path(args.input)
+        remove_watermark(args.input, output, **kwargs)
 
 
 if __name__ == "__main__":

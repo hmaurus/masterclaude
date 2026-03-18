@@ -29,7 +29,16 @@ bash ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/setup.sh
 
 O script fica em `${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py`.
 
-### Imagem única (marca d'água no canto inferior direito — padrão)
+### Imagem única (saída automática — padrão)
+
+Sem argumento de saída, o script renomeia a original para `_cmd` (com marca d'água) e salva a imagem limpa com o nome original:
+
+```bash
+# foto.png → foto_cmd.png (original) + foto.png (limpa)
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png
+```
+
+### Com saída explícita
 
 ```bash
 ~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py entrada.png saida.png
@@ -39,20 +48,20 @@ O script fica em `${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_w
 
 ```bash
 # Canto inferior esquerdo
-~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py entrada.png saida.png -c bl
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png -c bl
 
 # Canto superior direito
-~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py entrada.png saida.png -c tr
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png -c tr
 ```
 
 ### Ajustar tamanho da região
 
 ```bash
 # Marca d'água maior (12% da imagem em vez do padrão 8%)
-~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py entrada.png saida.png -s 12
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png -s 12
 
 # Marca d'água bem pequena (5%)
-~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py entrada.png saida.png -s 5
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png -s 5
 ```
 
 ### Região manual (coordenadas em pixels)
@@ -61,13 +70,17 @@ Quando a marca d'água não está no canto ou tem posição irregular:
 
 ```bash
 # --rect x1,y1,x2,y2 (canto superior esquerdo e inferior direito da região)
-~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py entrada.png saida.png --rect 700,450,800,500
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py foto.png --rect 700,450,800,500
 ```
 
 ### Batch (pasta inteira)
 
 ```bash
+# Com pasta de saída separada
 ~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py pasta_entrada/ pasta_saida/
+
+# In-place (renomeia originais para _cmd, salva limpas no nome original)
+~/venvs/watermark-remover/bin/python ${CLAUDE_PLUGIN_ROOT}/skills/remove-watermark/scripts/remove_watermark.py pasta/
 ```
 
 ## Opções
