@@ -15,6 +15,11 @@
       "name": "pdir-workflow",
       "source": "./plugins/pdir-workflow",
       "description": "Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA"
+    },
+    {
+      "name": "image-tools",
+      "source": "./plugins/image-tools",
+      "description": "Ferramentas de manipulação de imagens — remoção de background com rembg"
     }
   ]
 }

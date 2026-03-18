@@ -1,0 +1,14 @@
+{
+  "name": "image-tools",
+  "version": "1.0.0",
+  "description": "Ferramentas de manipulação de imagens — remoção de background com rembg",
+  "author": {
+    "name": "Maurus Henriques",
+    "email": "maurus@maurus.com.br",
+    "url": "https://github.com/hmaurus"
+  },
+  "homepage": "https://github.com/hmaurus/masterclaude",
+  "repository": "https://github.com/hmaurus/masterclaude",
+  "license": "MIT",
+  "keywords": ["image", "background-removal", "rembg"]
+}
