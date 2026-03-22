@@ -56,6 +56,7 @@ Commit realizado!
 Branch: [branch]
 
 Próximos passos:
+- /pdir-deploy (se pronto para produção)
 - /pdir-criar-pr (se pronto para review)
 - /pdir-commit (se há mais mudanças)
 ```
