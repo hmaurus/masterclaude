@@ -20,11 +20,6 @@
       "name": "image-tools",
       "source": "./plugins/image-tools",
       "description": "Ferramentas de manipulação de imagens — remoção de background com rembg"
-    },
-    {
-      "name": "aicflow-marketing-analytics",
-      "source": "./plugins/aicflow-marketing-analytics",
-      "description": "Análise de dados de marketing — leads, compras, receita, SEO, PageSpeed, Core Web Vitals, Search Console"
     }
   ]
 }
