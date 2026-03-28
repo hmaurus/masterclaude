@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
 Image Transform Tool
-Redimensionar, rotacionar, espelhar, recortar e converter imagens com Pillow.
+Redimensionar, rotacionar, espelhar, recortar, ajustar e converter imagens com Pillow.
 """
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 except ImportError:
     print("Erro: Pillow não instalado. Execute setup.sh primeiro.", file=sys.stderr)
     sys.exit(1)
@@ -47,6 +48,43 @@ def parse_crop(value):
         )
 
 
+def parse_pad(value):
+    """Aceita N (uniforme) ou T,R,B,L (individual)."""
+    parts = value.split(",")
+    if len(parts) == 1:
+        n = int(parts[0])
+        return (n, n, n, n)
+    elif len(parts) == 4:
+        return tuple(int(p.strip()) for p in parts)
+    else:
+        raise argparse.ArgumentTypeError(
+            f"Formato inválido: '{value}'. Use N (uniforme) ou T,R,B,L"
+        )
+
+
+def parse_color(value):
+    """Aceita nomes de cor ou hex (#RRGGBB / #RGB)."""
+    color_names = {
+        "white": (255, 255, 255), "black": (0, 0, 0),
+        "red": (255, 0, 0), "green": (0, 128, 0), "blue": (0, 0, 255),
+        "transparent": (0, 0, 0, 0),
+    }
+    lower = value.lower().strip()
+    if lower in color_names:
+        return color_names[lower]
+    if lower.startswith("#"):
+        h = lower.lstrip("#")
+        if len(h) == 3:
+            h = "".join(c * 2 for c in h)
+        if len(h) == 6:
+            return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+        if len(h) == 8:
+            return tuple(int(h[i:i+2], 16) for i in (0, 2, 4, 6))
+    raise argparse.ArgumentTypeError(
+        f"Cor inválida: '{value}'. Use nome (white, black...) ou hex (#RRGGBB)"
+    )
+
+
 def determine_paths(input_path: Path, args):
     """
     Retorna (output_path, backup_path_or_None).
@@ -55,7 +93,7 @@ def determine_paths(input_path: Path, args):
     - Caso contrário (in-place): renomeia original para _original, salva no nome original.
     - Se --no-backup: in-place sem backup.
     """
-    input_ext = input_path.suffix  # ex: '.jpg'
+    input_ext = input_path.suffix
     output_ext = ("." + args.format) if args.format else input_ext
 
     if args.output:
@@ -76,7 +114,6 @@ def determine_paths(input_path: Path, args):
     if args.no_backup:
         return out_file, None
 
-    # Backup: não duplicar se já termina em _original
     stem = input_path.stem
     if stem.endswith("_original"):
         return out_file, None
@@ -88,10 +125,10 @@ def determine_paths(input_path: Path, args):
 def get_fill_color(img: Image.Image):
     """Retorna cor de preenchimento adequada ao modo da imagem."""
     if img.mode in ("RGBA", "LA"):
-        return (0, 0, 0, 0)  # transparente
+        return (0, 0, 0, 0)
     if img.mode == "RGB":
-        return (255, 255, 255)  # branco
-    return None  # Pillow decide
+        return (255, 255, 255)
+    return None
 
 
 def prepare_for_jpeg(img: Image.Image) -> Image.Image:
@@ -109,8 +146,69 @@ def prepare_for_jpeg(img: Image.Image) -> Image.Image:
     return img
 
 
+def apply_trim(img: Image.Image, fuzz: int = 10) -> Image.Image:
+    """Remove bordas uniformes ao redor da imagem.
+
+    Detecta a cor predominante nos cantos e remove qualquer borda contínua
+    dessa cor (com tolerância definida por fuzz).
+    """
+    import numpy as np
+
+    arr = np.array(img)
+    if arr.ndim == 2:
+        arr = arr[:, :, np.newaxis]
+
+    # Detectar cor de fundo a partir dos 4 cantos
+    corners = [arr[0, 0], arr[0, -1], arr[-1, 0], arr[-1, -1]]
+    bg = np.median(corners, axis=0).astype(np.uint8)
+
+    # Máscara de pixels diferentes do fundo
+    diff = np.abs(arr.astype(int) - bg.astype(int)).max(axis=-1)
+    mask = diff > fuzz
+
+    # Encontrar bounding box do conteúdo
+    rows = np.any(mask, axis=1)
+    cols = np.any(mask, axis=0)
+
+    if not rows.any() or not cols.any():
+        return img  # Imagem inteira é fundo — retorna sem alterar
+
+    top = np.argmax(rows)
+    bottom = len(rows) - np.argmax(rows[::-1])
+    left = np.argmax(cols)
+    right = len(cols) - np.argmax(cols[::-1])
+
+    return img.crop((left, top, right, bottom))
+
+
+def apply_pad(img: Image.Image, padding: tuple, color) -> Image.Image:
+    """Adiciona padding ao redor da imagem.
+
+    padding: (top, right, bottom, left)
+    """
+    top, right, bottom, left = padding
+    new_w = img.width + left + right
+    new_h = img.height + top + bottom
+
+    # Ajustar cor para o modo da imagem
+    if img.mode == "RGBA" and isinstance(color, tuple) and len(color) == 3:
+        color = color + (255,)
+    elif img.mode == "RGB" and isinstance(color, tuple) and len(color) == 4:
+        color = color[:3]
+
+    new_img = Image.new(img.mode, (new_w, new_h), color)
+    new_img.paste(img, (left, top))
+    return new_img
+
+
 def apply_transforms(img: Image.Image, args) -> Image.Image:
-    """Aplica todas as transformações na ordem: resize → crop → rotate → flip."""
+    """Aplica todas as transformações na ordem:
+    trim → resize → crop → pad → rotate → flip → adjustments → filters.
+    """
+
+    # --- Trim ---
+    if args.trim:
+        img = apply_trim(img, fuzz=args.trim_fuzz)
 
     # --- Resize (apenas uma das opções) ---
     if args.resize:
@@ -144,6 +242,11 @@ def apply_transforms(img: Image.Image, args) -> Image.Image:
         else:
             print("Aviso: coordenadas de crop inválidas — ignorado.", file=sys.stderr)
 
+    # --- Pad ---
+    if args.pad:
+        color = args.pad_color if args.pad_color else (255, 255, 255)
+        img = apply_pad(img, args.pad, color)
+
     # --- Rotate ---
     if args.rotate is not None:
         fill = get_fill_color(img)
@@ -155,6 +258,26 @@ def apply_transforms(img: Image.Image, args) -> Image.Image:
     elif args.flip == "vertical":
         img = img.transpose(Image.FLIP_TOP_BOTTOM)
 
+    # --- Ajustes visuais ---
+    if args.brightness is not None:
+        img = ImageEnhance.Brightness(img).enhance(args.brightness)
+
+    if args.contrast is not None:
+        img = ImageEnhance.Contrast(img).enhance(args.contrast)
+
+    if args.saturation is not None:
+        img = ImageEnhance.Color(img).enhance(args.saturation)
+
+    if args.grayscale:
+        img = ImageOps.grayscale(img)
+
+    # --- Filtros ---
+    if args.sharpen:
+        img = img.filter(ImageFilter.SHARPEN)
+
+    if args.blur is not None:
+        img = img.filter(ImageFilter.GaussianBlur(radius=args.blur))
+
     return img
 
 
@@ -162,11 +285,9 @@ def save_image(img: Image.Image, out_path: Path, fmt: str, quality: int):
     """Salva imagem no formato e qualidade especificados."""
     pil_format = FORMAT_MAP.get(fmt.lower(), fmt.upper()) if fmt else None
 
-    # Normalizar a partir da extensão se fmt não fornecido
     if pil_format is None:
         pil_format = FORMAT_MAP.get(out_path.suffix.lstrip(".").lower(), "JPEG")
 
-    # JPEG não suporta transparência
     if pil_format == "JPEG":
         img = prepare_for_jpeg(img)
 
@@ -178,13 +299,48 @@ def save_image(img: Image.Image, out_path: Path, fmt: str, quality: int):
     img.save(str(out_path), format=pil_format, **save_kwargs)
 
 
+def show_info(input_path: Path):
+    """Mostra informações detalhadas da imagem em formato JSON."""
+    img = Image.open(input_path)
+
+    try:
+        img = ImageOps.exif_transpose(img)
+    except Exception:
+        pass
+
+    file_size = input_path.stat().st_size
+    info = {
+        "file": str(input_path),
+        "format": img.format or input_path.suffix.lstrip(".").upper(),
+        "mode": img.mode,
+        "width": img.width,
+        "height": img.height,
+        "file_size_bytes": file_size,
+        "file_size_human": f"{file_size / 1024:.1f}KB" if file_size < 1024 * 1024
+                           else f"{file_size / (1024 * 1024):.1f}MB",
+    }
+
+    # DPI se disponível
+    dpi = img.info.get("dpi")
+    if dpi:
+        info["dpi"] = {"x": round(dpi[0]), "y": round(dpi[1])}
+
+    # Frames (GIF animado)
+    try:
+        n_frames = getattr(img, "n_frames", 1)
+        if n_frames > 1:
+            info["frames"] = n_frames
+    except Exception:
+        pass
+
+    print(json.dumps(info, indent=2, ensure_ascii=False))
+
+
 def process_file(input_path: Path, args) -> Path:
     """Processa um único arquivo. Retorna o caminho de saída."""
     img = Image.open(input_path)
 
-    # Respeitar orientação EXIF
     try:
-        from PIL import ImageOps
         img = ImageOps.exif_transpose(img)
     except Exception:
         pass
@@ -196,7 +352,6 @@ def process_file(input_path: Path, args) -> Path:
 
     out_path, backup_path = determine_paths(input_path, args)
 
-    # Fazer backup antes de sobrescrever
     if backup_path and not backup_path.exists():
         input_path.rename(backup_path)
 
@@ -222,19 +377,27 @@ def get_image_files(directory: Path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transformar imagens: resize, rotate, flip, crop, convert.",
+        description="Transformar imagens: resize, rotate, flip, crop, trim, pad, adjust, convert.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemplos:
   transform.py foto.jpg --rotate 90
   transform.py foto.jpg --fit-width 1200 --format webp
-  transform.py foto.jpg --flip horizontal --suffix _mirror
+  transform.py foto.jpg --trim --resize 800x600 --sharpen
+  transform.py foto.jpg --brightness 1.2 --contrast 1.1 --suffix _enhanced
+  transform.py foto.jpg --pad 20 --pad-color "#f0f0f0"
+  transform.py foto.jpg --info
   transform.py fotos/ --scale 50 --batch --suffix _small
-  transform.py foto.jpg --crop 0,0,800,600 --rotate 90 --format png
 """,
     )
 
     parser.add_argument("input", help="Arquivo de imagem ou diretório (com --batch)")
+
+    # Info (exibe e sai)
+    parser.add_argument(
+        "--info", action="store_true",
+        help="Exibir informações da imagem (dimensões, formato, tamanho, DPI)",
+    )
 
     # Resize (mutuamente exclusivos)
     resize_group = parser.add_mutually_exclusive_group()
@@ -255,7 +418,7 @@ Exemplos:
         help="Ajustar altura mantendo proporção",
     )
 
-    # Outras transformações
+    # Transformações geométricas
     parser.add_argument(
         "--rotate", type=float, metavar="GRAUS",
         help="Rotacionar N graus anti-horário (ex: 90, 180, 270, -90, 45)",
@@ -267,6 +430,52 @@ Exemplos:
     parser.add_argument(
         "--crop", type=parse_crop, metavar="L,T,R,B",
         help="Recortar (esquerda,topo,direita,base em pixels)",
+    )
+
+    # Trim e Padding
+    parser.add_argument(
+        "--trim", action="store_true",
+        help="Remover bordas/margens uniformes automaticamente",
+    )
+    parser.add_argument(
+        "--trim-fuzz", type=int, default=10, metavar="N",
+        help="Tolerância para trim (0-255, padrão: 10)",
+    )
+    parser.add_argument(
+        "--pad", type=parse_pad, metavar="N ou T,R,B,L",
+        help="Adicionar padding (uniforme ou individual)",
+    )
+    parser.add_argument(
+        "--pad-color", type=parse_color, metavar="COR",
+        help="Cor do padding: nome (white, black) ou hex (#RRGGBB). Padrão: white",
+    )
+
+    # Ajustes visuais
+    parser.add_argument(
+        "--brightness", type=float, metavar="F",
+        help="Fator de brilho (1.0=original, >1=mais claro, <1=mais escuro)",
+    )
+    parser.add_argument(
+        "--contrast", type=float, metavar="F",
+        help="Fator de contraste (1.0=original, >1=mais contraste)",
+    )
+    parser.add_argument(
+        "--saturation", type=float, metavar="F",
+        help="Fator de saturação (1.0=original, 0=cinza, >1=mais vibrante)",
+    )
+    parser.add_argument(
+        "--grayscale", action="store_true",
+        help="Converter para escala de cinza",
+    )
+
+    # Filtros
+    parser.add_argument(
+        "--sharpen", action="store_true",
+        help="Aumentar nitidez da imagem",
+    )
+    parser.add_argument(
+        "--blur", type=float, metavar="R",
+        help="Desfoque gaussiano com raio R (ex: 2.0)",
     )
 
     # Formato e qualidade
@@ -304,6 +513,16 @@ Exemplos:
     if not input_path.exists():
         print(f"Erro: '{input_path}' não encontrado.", file=sys.stderr)
         sys.exit(1)
+
+    # Modo info: exibe e sai
+    if args.info:
+        if input_path.is_dir():
+            for f in get_image_files(input_path):
+                show_info(f)
+                print()
+        else:
+            show_info(input_path)
+        return
 
     # Coletar arquivos
     if args.batch or input_path.is_dir():

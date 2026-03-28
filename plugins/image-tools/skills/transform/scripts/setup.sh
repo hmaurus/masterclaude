@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup script para image-transform (Pillow em virtualenv isolado)
+# Setup script para image-transform (Pillow + numpy em virtualenv isolado)
 
 VENV_DIR="$HOME/venvs/image-transform"
 
@@ -12,12 +12,12 @@ else
     echo "Virtualenv criado."
 fi
 
-echo "Instalando/atualizando Pillow..."
+echo "Instalando/atualizando dependências..."
 "$VENV_DIR/bin/pip" install --quiet --upgrade pip
-"$VENV_DIR/bin/pip" install --quiet "Pillow>=10.0.0"
+"$VENV_DIR/bin/pip" install --quiet "Pillow>=10.0.0" "numpy>=1.24.0"
 
 echo ""
-echo "✓ Pillow instalado com sucesso!"
-"$VENV_DIR/bin/python" -c "from PIL import Image; print('  Versão:', Image.__version__ if hasattr(Image, '__version__') else 'OK')"
+echo "✓ Dependências instaladas com sucesso!"
+"$VENV_DIR/bin/python" -c "from PIL import Image; import numpy; print('  Pillow:', Image.__version__ if hasattr(Image, '__version__') else 'OK'); print('  numpy:', numpy.__version__)"
 echo ""
 echo "Uso: $VENV_DIR/bin/python transform.py --help"

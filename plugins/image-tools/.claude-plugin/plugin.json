@@ -1,7 +1,7 @@
 {
   "name": "image-tools",
   "version": "1.0.0",
-  "description": "Ferramentas de manipulação de imagens — remoção de background, remoção de watermark, redimensionamento, rotação, flip, crop e conversão de formato",
+  "description": "Ferramentas de manipulação de imagens — split/separação de elementos, remoção de background, remoção de watermark, redimensionamento, rotação, flip, crop, trim, padding, ajustes visuais e conversão de formato",
   "author": {
     "name": "Maurus Henriques",
     "email": "maurus@maurus.com.br",
@@ -10,5 +10,5 @@
   "homepage": "https://github.com/hmaurus/masterclaude",
   "repository": "https://github.com/hmaurus/masterclaude",
   "license": "MIT",
-  "keywords": ["image", "background-removal", "rembg", "resize", "rotate", "flip", "crop", "convert", "transform"]
+  "keywords": ["image", "background-removal", "rembg", "resize", "rotate", "flip", "crop", "convert", "transform", "split", "grid", "auto-split", "trim", "padding", "brightness", "contrast", "sharpen", "blur", "grayscale"]
 }
