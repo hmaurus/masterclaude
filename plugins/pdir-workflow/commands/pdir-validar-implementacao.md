@@ -108,7 +108,16 @@ Verificar se existe `docs/projeto/PRD.md`. Se não existir, pular silenciosament
 
 Se existir, ler o PRD e identificar no checklist (`- [ ]`, `- [x]`) o item que corresponde à demanda implementada. Se encontrar correspondência, perguntar ao usuário se deve marcar como concluído (`- [x]`).
 
-### 8. Feedback Final
+### 8. Marcar Spec como Concluída (se aplicável)
+
+**Apenas se a fonte foi um arquivo de spec** (ex: `docs/projeto/specs/spec-paywall.md`):
+
+Renomear o arquivo adicionando o sufixo `_concluida`:
+```bash
+mv docs/projeto/specs/spec-paywall.md docs/projeto/specs/spec-paywall_concluida.md
+```
+
+### 9. Feedback Final
 
 ```
 Validação e documentação concluídas!
@@ -116,6 +125,7 @@ Validação e documentação concluídas!
 Fonte: [#número - título | arquivo | descrição]
 Issue: [comentada e fechada | comentada | N/A]
 PRD: [item X marcado como concluído | sem alterações | não encontrado]
+Spec: [renomeada para *_concluida.md | N/A]
 
 Próximos passos:
 - /pdir-commit

@@ -1,9 +1,9 @@
 ---
-description: Finaliza tarefa fazendo squash merge do PR, deletando branch e sincronizando local. Usar quando o PR está aprovado e pronto para merge
+description: Finaliza PR fazendo squash merge, deletando branch e sincronizando local. Usar quando o PR está aprovado e pronto para merge
 argument-hint: [numero-do-pr]
 ---
 
-# PDIR: Merge Tarefa
+# PDIR: Merge PR
 
 Valida, faz merge do PR e limpa branch local/remota.
 
@@ -53,8 +53,7 @@ Merge realizado!
 PR: #[número] → [branch-default] (squash merge)
 Branch deletada (local + remota)
 
-Tarefa concluída!
-
 Próximos passos:
-- /pdir-implementar-tarefa-com-branch [próxima-issue] (se houver mais tarefas)
+- /pdir-deploy (se pronto para produção)
+- /pdir-proxima-spec (sugerir próxima demanda)
 ```
