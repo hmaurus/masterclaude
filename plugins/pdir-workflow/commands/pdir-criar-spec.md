@@ -34,7 +34,7 @@ Entrevistar o usuário em profundidade usando AskUserQuestion. Cobrir:
 - Tradeoffs
 
 Regras da entrevista:
-- **Não perguntar o óbvio** — focar nas partes difíceis que o usuário pode não ter considerado
+- **Focar nas partes difíceis** que o usuário pode não ter considerado
 - **Ir fundo** — se uma resposta revela complexidade, explorar antes de avançar
 - **Continuar até cobrir tudo** — não encerrar prematuramente
 

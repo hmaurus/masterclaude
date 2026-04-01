@@ -55,7 +55,13 @@ git push -u origin "$(git branch --show-current)"
 
 Se tem upstream mas há commits locais não enviados (`git log @{u}..HEAD --oneline`), fazer `git push`.
 
-### 3. Buscar Issue e Analisar Branch
+### 3. Validar Antes de Criar PR
+
+Executar os checks do projeto (lint, type-check, testes). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
+
+Se algum check falhar, informar ao usuário e perguntar se deseja corrigir antes de criar o PR ou prosseguir mesmo assim.
+
+### 4. Buscar Issue e Analisar Branch
 
 ```bash
 gh issue view [número] --json number,title,body
@@ -68,7 +74,7 @@ Se a Issue não existir: informar erro com o número tentado e perguntar ao usu�
 
 Derivar `type` do prefixo da branch (ex: `feat/` → `feat`, `fix/` → `fix`). Derivar `scope` do título da Issue ou da área principal dos arquivos modificados. Derivar título e resumo a partir da Issue e dos commits.
 
-### 4. Criar Pull Request
+### 5. Criar Pull Request
 
 ```bash
 DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
@@ -92,7 +98,7 @@ EOF
 )"
 ```
 
-### 5. Feedback Final
+### 6. Feedback Final
 
 ```
 PR criado!
