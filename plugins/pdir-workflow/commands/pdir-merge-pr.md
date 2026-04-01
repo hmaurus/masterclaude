@@ -55,5 +55,5 @@ Branch deletada (local + remota)
 
 Próximos passos:
 - /pdir-deploy (se pronto para produção)
-- /pdir-proxima-spec (sugerir próxima demanda)
+- /pdir-proxima-demanda (sugerir próxima demanda)
 ```

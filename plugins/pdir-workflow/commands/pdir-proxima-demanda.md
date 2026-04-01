@@ -3,7 +3,7 @@ description: Analisa contexto atual e projeto para sugerir a próxima demanda a 
 argument-hint: [arquivo-prd]
 ---
 
-# PDIR: Próxima Spec
+# PDIR: Próxima Demanda
 
 Analisa o contexto da sessão atual, o plano do projeto e as Issues do GitHub para sugerir a próxima demanda a implementar. Ideal para ser executado logo após concluir uma demanda, aproveitando o contexto fresco antes do `/clear`.
 
