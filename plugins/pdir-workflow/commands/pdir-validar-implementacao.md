@@ -5,7 +5,7 @@ argument-hint: "<número-issue | arquivo.md | descrição livre>"
 
 # PDIR: Validar Implementação
 
-Valida se a implementação atende à demanda original. Pode ser usado após qualquer abordagem de implementação (plan-mode nativo, `/pdir-implementar-tarefa-com-branch`, correção manual).
+Valida se a implementação atende à demanda original, documenta o que foi feito e atualiza o progresso do projeto. Pode ser usado após qualquer abordagem de implementação (plan-mode nativo, feature branch, correção manual).
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
@@ -76,7 +76,46 @@ Fonte: [#número - título | arquivo | descrição]
 - [rota 2]: [ok | erro — detalhes]
 
 ## Resultado
-[Tudo ok — pronto para commit/PR | Há itens pendentes — ver detalhes acima]
+[Tudo ok | Há itens pendentes — ver detalhes acima]
+```
+
+**Se houver falhas:** parar aqui. O usuário deve corrigir e rodar a validação novamente.
+
+**Se tudo passou:** prosseguir para os passos 6 e 7.
+
+### 6. Documentar na Issue (se aplicável)
+
+**Apenas se a fonte foi uma Issue do GitHub:**
+
+```bash
+gh issue comment [número] --body "$(cat <<'EOF'
+## Implementação Realizada
+
+### Arquivos modificados/criados
+- `arquivo.ts` - descrição
+
+### Resumo
+Breve descrição do que foi feito.
+EOF
+)"
+```
+
+Perguntar ao usuário se deseja fechar a issue agora.
+
+### 7. Atualizar PRD
+
+Verificar se existe `docs/projeto/PRD.md`. Se não existir, pular silenciosamente.
+
+Se existir, ler o PRD e identificar no checklist (`- [ ]`, `- [x]`) o item que corresponde à demanda implementada. Se encontrar correspondência, perguntar ao usuário se deve marcar como concluído (`- [x]`).
+
+### 8. Feedback Final
+
+```
+Validação e documentação concluídas!
+
+Fonte: [#número - título | arquivo | descrição]
+Issue: [comentada e fechada | comentada | N/A]
+PRD: [item X marcado como concluído | sem alterações | não encontrado]
 
 Próximos passos:
 - /pdir-commit
