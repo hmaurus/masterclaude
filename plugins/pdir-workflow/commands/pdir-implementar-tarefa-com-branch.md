@@ -1,33 +1,36 @@
 ---
-description: Implementa tarefa a partir de Issue existente do GitHub com branch separada. Busca Issue, analisa projeto, cria branch, implementa, valida e documenta
-argument-hint: "<número-issue> [skills: skill1, skill2, ...]"
+description: Implementa tarefa a partir de Issue GitHub, arquivo .md ou descrição livre, com branch separada
+argument-hint: "<número-issue | arquivo.md | descrição livre> [skills: skill1, skill2, ...]"
 ---
 
 # PDIR: Implementar Tarefa (com branch)
 
-Implementa uma tarefa a partir de uma Issue do GitHub, criando branch separada.
+Implementa uma tarefa criando branch separada.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
 ## Processar $ARGUMENTS
 
 Extrair do `$ARGUMENTS`:
-- **Número da Issue:** primeiro valor numérico (ex: `42`)
-- **Skills:** se contém `skills:`, extrair nomes separados por vírgula (ex: `skills: brainstorming, feature-dev`)
-
-Se skills foram passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+- **Skills:** se contém `skills:`, extrair nomes separados por vírgula (ex: `skills: brainstorming, feature-dev`). Se passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+- **Fonte da demanda (restante):** identificar o tipo:
+  - **Número** (ex: `42`) → Issue do GitHub
+  - **Caminho de arquivo** (ex: `docs/projeto/specs/spec-paywall.md`) → arquivo local
+  - **Texto** → descrição livre
 
 ## Instruções
 
-### 1. Buscar Issue
+### 1. Obter Escopo da Demanda
 
+**Se Issue GitHub:**
 ```bash
 gh issue view [número] --json number,title,body,comments
 ```
-
 Analisar o body **e todos os comentários** — comentários frequentemente contêm decisões, esclarecimentos e requisitos adicionais.
 
-Se não existir: informar para criar usando `/pdir-criar-issue`.
+**Se arquivo .md:** ler o arquivo completo como escopo.
+
+**Se descrição livre:** usar o texto como escopo.
 
 ### 2. Analisar Projeto
 
@@ -44,15 +47,18 @@ git branch --show-current
 
 Se houver mudanças pendentes, informar ao usuário antes de prosseguir.
 
-Derivar `tipo` do título da Issue: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`.
+Derivar `tipo` do escopo da demanda: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`.
 
 ```bash
-git checkout -b [tipo]/[número]-[slug]
+git checkout -b [tipo]/[número-ou-slug]
 ```
 
 Slug: palavras-chave do título em kebab-case, sem acentos, max 50 chars.
 
-Exemplo: `feat(auth): implementar login` → `feat/42-implementar-login`
+Exemplos:
+- Issue `#42 feat(auth): implementar login` → `feat/42-implementar-login`
+- Arquivo `spec-paywall.md` → `feat/paywall`
+- Descrição `corrigir link quebrado` → `fix/link-quebrado`
 
 ### 4. Planejar Implementação
 
@@ -82,7 +88,9 @@ Executar os checks do projeto (lint, type-check, testes). Consultar `package.jso
 
 Se algum check falhar, corrigir antes de prosseguir.
 
-### 7. Documentar na Issue
+### 7. Documentar na Issue (se aplicável)
+
+**Apenas se a fonte foi uma Issue do GitHub:**
 
 ```bash
 gh issue comment [número] --body "$(cat <<'EOF'
@@ -102,12 +110,12 @@ EOF
 ```
 Tarefa implementada!
 
-Issue: #[número] - [título]
+Fonte: [#número - título | arquivo | descrição]
 Branch: [branch]
 
 Próximos passos:
 - /pdir-commit
-- /pdir-criar-pr [número-issue] (se implementação completa)
+- /pdir-criar-pr (se implementação completa)
 
 Dica: execute /clear antes do próximo /pdir-implementar-tarefa-com-branch para contexto limpo.
 ```

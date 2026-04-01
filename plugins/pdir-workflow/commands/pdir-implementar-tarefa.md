@@ -1,21 +1,22 @@
 ---
-description: Implementa tarefa a partir de Issue existente do GitHub direto na branch atual
-argument-hint: "<número-issue> [skills: skill1, skill2, ...]"
+description: Implementa tarefa a partir de Issue GitHub, arquivo .md ou descrição livre, direto na branch atual
+argument-hint: "<número-issue | arquivo.md | descrição livre> [skills: skill1, skill2, ...]"
 ---
 
 # PDIR: Implementar Tarefa
 
-Implementa uma tarefa a partir de uma Issue do GitHub, direto na branch atual.
+Implementa uma tarefa direto na branch atual.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
 ## Processar $ARGUMENTS
 
 Extrair do `$ARGUMENTS`:
-- **Número da Issue:** primeiro valor numérico (ex: `42`)
-- **Skills:** se contém `skills:`, extrair nomes separados por vírgula (ex: `skills: brainstorming, feature-dev`)
-
-Se skills foram passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+- **Skills:** se contém `skills:`, extrair nomes separados por vírgula (ex: `skills: brainstorming, feature-dev`). Se passadas, carregá-las **obrigatoriamente** antes de prosseguir.
+- **Fonte da demanda (restante):** identificar o tipo:
+  - **Número** (ex: `42`) → Issue do GitHub
+  - **Caminho de arquivo** (ex: `docs/projeto/specs/spec-paywall.md`) → arquivo local
+  - **Texto** → descrição livre
 
 ## Instruções
 
@@ -28,15 +29,17 @@ git branch --show-current
 
 Se houver mudanças pendentes, informar ao usuário antes de prosseguir.
 
-### 2. Buscar Issue
+### 2. Obter Escopo da Demanda
 
+**Se Issue GitHub:**
 ```bash
 gh issue view [número] --json number,title,body,comments
 ```
-
 Analisar o body **e todos os comentários** — comentários frequentemente contêm decisões, esclarecimentos e requisitos adicionais.
 
-Se não existir: informar para criar usando `/pdir-criar-issue`.
+**Se arquivo .md:** ler o arquivo completo como escopo.
+
+**Se descrição livre:** usar o texto como escopo.
 
 ### 3. Analisar Projeto
 
@@ -71,7 +74,9 @@ Executar os checks do projeto (lint, type-check, testes). Consultar `package.jso
 
 Se algum check falhar, corrigir antes de prosseguir.
 
-### 7. Documentar na Issue
+### 7. Documentar na Issue (se aplicável)
+
+**Apenas se a fonte foi uma Issue do GitHub:**
 
 ```bash
 gh issue comment [número] --body "$(cat <<'EOF'
@@ -86,8 +91,6 @@ EOF
 )"
 ```
 
-### 8. Fechar Issue
-
 Perguntar ao usuário se deseja fechar a issue agora.
 
 Se sim:
@@ -97,12 +100,12 @@ gh issue close [número] --comment "Fechada via implementação direta (sem PR).
 
 Se não: informar que a issue permanece aberta.
 
-### 9. Feedback Final
+### 8. Feedback Final
 
 ```
 Tarefa implementada!
 
-Issue: #[número] - [título]
+Fonte: [#número - título | arquivo | descrição]
 Branch atual: [branch]
 
 Próximos passos:
