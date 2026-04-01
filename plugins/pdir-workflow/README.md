@@ -1,6 +1,6 @@
 # pdir-workflow
 
-Método **PDIR** (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA.
+Plugin de comandos composáveis para o **Método JIT** — desenvolvimento estruturado com IA usando planejamento just-in-time.
 
 ## Pré-requisitos
 
@@ -11,30 +11,37 @@ Método **PDIR** (Planejar, Dividir, Implementar, Revisar) para desenvolvimento 
 
 | Comando | Descrição |
 |---------|-----------|
-| `/pdir-dividir-em-tarefas` | Divide PRD ou documento em tarefas atômicas |
-| `/pdir-criar-issue` | Cria Issue no GitHub a partir de tarefas ou descrição livre |
-| `/pdir-proxima-tarefa` | Sugere próxima tarefa com base no contexto atual e projeto |
-| `/pdir-implementar-tarefa` | Implementa tarefa direto na branch atual |
-| `/pdir-implementar-tarefa-com-branch` | Implementa tarefa com branch separada |
+| `/pdir-criar-spec` | Cria spec via entrevista em profundidade (Interview Pattern) |
+| `/pdir-validar-implementacao` | Valida contra a spec, documenta na Issue e atualiza PRD |
 | `/pdir-commit` | Commit e push com Conventional Commits |
-| `/pdir-criar-pr` | Cria Pull Request vinculado a Issue |
-| `/pdir-merge-tarefa` | Valida, faz merge e limpa branch |
+| `/pdir-criar-pr` | Cria PR com validação antes |
+| `/pdir-merge-pr` | Squash merge + limpeza de branch |
+| `/pdir-deploy` | Merge para produção |
+| `/pdir-proxima-demanda` | Sugere próxima demanda do PRD |
 
 ## Fluxo Típico
 
 ```
-Planejar PRD → Dividir em Tarefas → Criar Issues → Implementar → Commit → PR → Merge
+/pdir-proxima-demanda          → escolher próxima demanda do PRD
+/pdir-criar-spec "demanda X"   → spec via entrevista
+/clear
+"Implemente a spec em docs/projeto/specs/spec-X.md"  → plan-mode nativo
+/pdir-validar-implementacao docs/projeto/specs/spec-X.md
+/pdir-commit
+/pdir-criar-pr
+/pdir-merge-pr
+/pdir-deploy
 ```
 
-## Criar um PRD
+Demandas simples não precisam de spec — vão direto para plan-mode.
 
-Este plugin foca no ciclo a partir da divisão em tarefas. Para criar um PRD (`docs/projeto/PRD.md`), use uma dessas abordagens:
+## Método JIT
 
-- **`/doc-coauthoring`** — co-autoria interativa com entrevista, refinamento e teste de clareza (requer skill `doc-coauthoring`)
-- **`/brainstorming`** — exploração criativa de requisitos antes de estruturar o PRD
-- **Conversa direta** — descreva o projeto ao Claude e peça para criar o PRD em `docs/projeto/PRD.md`
+Este plugin implementa ferramentas composáveis para o [Método JIT](https://aicodingflow.com), uma metodologia onde:
 
-Após ter o PRD, inicie o fluxo com `/pdir-dividir-em-tarefas docs/projeto/PRD.md`.
+- O **humano** define o quê (PRD, demandas, specs)
+- O **AI** planeja e executa o como (plan-mode, implementação)
+- Cada comando é **independente** — use conforme a necessidade, não por obrigação de pipeline
 
 ## Licença
 

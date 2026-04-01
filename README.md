@@ -13,7 +13,7 @@ Marketplace de plugins Claude Code por Maurus Henriques.
 
 ### pdir-workflow
 
-Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estruturado com IA.
+Comandos composáveis para o **Método JIT** — desenvolvimento estruturado com IA usando planejamento just-in-time.
 
 ```bash
 /plugin install pdir-workflow@hmaurus-masterclaude
@@ -28,19 +28,18 @@ Método PDIR (Planejar, Dividir, Implementar, Revisar) para desenvolvimento estr
 
 | Comando | Descrição |
 |---------|-----------|
-| `/pdir-criar-prd` | descrição → PRD.md (com fases) |
-| `/pdir-dividir-em-tarefas` | plano/fase → lista de tarefas |
-| `/pdir-criar-issue` | tarefa → Issue GitHub |
-| `/pdir-implementar-tarefa` | Issue → código na branch atual |
-| `/pdir-implementar-tarefa-com-branch` | Issue → branch separada + código |
+| `/pdir-criar-spec` | spec via entrevista em profundidade |
+| `/pdir-validar-implementacao` | valida + documenta + atualiza PRD |
 | `/pdir-commit` | commit + push |
-| `/pdir-criar-pr` | cria PR vinculado a Issue |
-| `/pdir-merge-tarefa` | review + merge + limpeza |
+| `/pdir-criar-pr` | cria PR com validação antes |
+| `/pdir-merge-pr` | squash merge + limpeza |
+| `/pdir-deploy` | merge para produção |
+| `/pdir-proxima-demanda` | sugere próxima demanda |
 
 #### Fluxo
 
 ```
-PRD.md → Tarefas (por fase) → Issue → Implementar → Commit → PR → Merge
+Spec → /clear → Plan-mode → Validar → Commit → PR → Merge → Deploy
 ```
 
 ## Estrutura
