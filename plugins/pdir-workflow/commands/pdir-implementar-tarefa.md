@@ -55,9 +55,10 @@ Ler CLAUDE.md, README.md e arquivos relacionados à tarefa. Identificar padrões
 
 **IMPORTANTE — Passos pós-implementação no plano:** O plan mode pode limpar o contexto da conversa ao iniciar a execução. Para garantir que nenhum passo seja perdido, o plano **deve incluir obrigatoriamente** as seguintes etapas finais:
 - Validar (lint, type-check, testes)
-- Documentar na Issue (`gh issue comment [número]` com resumo da implementação)
-- Perguntar ao usuário se deseja fechar a Issue
-- Exibir feedback final com número da issue, branch e próximos passos
+- Verificar contra o escopo original (reler a fonte da demanda e confirmar que todos os pontos foram atendidos)
+- Smoke test visual: navegar pelas rotas afetadas e verificar se não há erros no console
+- Se a fonte foi Issue: documentar na Issue e perguntar se deseja fechá-la
+- Exibir feedback final com fonte, branch e próximos passos
 
 Aguardar aprovação do usuário antes de prosseguir.
 
@@ -70,9 +71,11 @@ Executar o plano aprovado:
 
 ### 6. Validar
 
-Executar os checks do projeto (lint, type-check, testes). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
+**CI:** Executar os checks do projeto (lint, type-check, testes). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis. Se algum check falhar, corrigir antes de prosseguir.
 
-Se algum check falhar, corrigir antes de prosseguir.
+**Spec check:** Reler a fonte da demanda (Issue, arquivo .md ou descrição) e verificar item por item se todos os pontos foram atendidos. Se algo ficou faltando, implementar antes de prosseguir.
+
+**Smoke test:** Navegar pelas rotas afetadas, verificar se não há erros no console e se o comportamento está correto visualmente.
 
 ### 7. Documentar na Issue (se aplicável)
 
