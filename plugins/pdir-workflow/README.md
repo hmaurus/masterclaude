@@ -12,12 +12,12 @@ Plugin de comandos composáveis para o **Método JIT** — desenvolvimento estru
 | Comando | Descrição |
 |---------|-----------|
 | `/pdir-criar-spec` | Cria spec via entrevista em profundidade (Interview Pattern) |
+| `/pdir-proxima-demanda` | Sugere próxima demanda do PRD |
 | `/pdir-validar-implementacao` | Valida contra a spec, documenta na Issue e atualiza PRD |
 | `/pdir-commit` | Commit e push com Conventional Commits |
 | `/pdir-criar-pr` | Cria PR com validação antes |
 | `/pdir-merge-pr` | Squash merge + limpeza de branch |
 | `/pdir-deploy` | Merge para produção |
-| `/pdir-proxima-demanda` | Sugere próxima demanda do PRD |
 
 ## Fluxo Típico
 

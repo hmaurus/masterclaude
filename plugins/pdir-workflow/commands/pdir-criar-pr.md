@@ -108,6 +108,6 @@ Branch: [branch]
 Link: [url]
 
 Próximos passos:
-- /pdir-merge-tarefa (quando aprovado)
+- /pdir-merge-pr (quando aprovado)
 - /pdir-commit (se continuar desenvolvendo)
 ```
