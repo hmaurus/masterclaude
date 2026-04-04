@@ -11,6 +11,7 @@ Plugin de comandos composáveis para o **Método JIT** — desenvolvimento estru
 
 | Comando | Descrição |
 |---------|-----------|
+| `/pdir-criar-prd` | Cria PRD (roadmap com checklist de demandas) via entrevista |
 | `/pdir-criar-spec` | Cria spec via entrevista em profundidade (Interview Pattern) |
 | `/pdir-proxima-demanda` | Sugere próxima demanda do PRD |
 | `/pdir-validar-implementacao` | Valida contra a spec, documenta na Issue e atualiza PRD |
@@ -22,8 +23,9 @@ Plugin de comandos composáveis para o **Método JIT** — desenvolvimento estru
 ## Fluxo Típico
 
 ```
-/pdir-proxima-demanda          → escolher próxima demanda do PRD
-/pdir-criar-spec "demanda X"   → spec via entrevista
+/pdir-criar-prd                  → PRD do projeto via entrevista (1x no início)
+/pdir-proxima-demanda            → escolher próxima demanda do PRD
+/pdir-criar-spec "demanda X"     → spec da demanda via entrevista
 /clear
 "Implemente a spec em docs/projeto/specs/spec-X.md"  → plan-mode nativo
 /pdir-validar-implementacao docs/projeto/specs/spec-X.md
