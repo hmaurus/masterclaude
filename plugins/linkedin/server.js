@@ -1,7 +1,7 @@
 /**
  * MCP Server para LinkedIn — permite postar, editar e deletar posts no LinkedIn via Claude Code.
  * Ferramentas: linkedin_create_post, linkedin_create_post_with_image, linkedin_create_post_with_link,
- *              linkedin_edit_post, linkedin_delete_post, linkedin_check_status
+ *              linkedin_comment_post, linkedin_edit_post, linkedin_delete_post, linkedin_check_status
  */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
@@ -303,6 +303,44 @@ server.tool(
           {
             type: 'text',
             text: `Post com link publicado!\nURL do post: ${postUrl}\nPost ID: ${result.postId}\nLink: ${url}`,
+          },
+        ],
+      }
+    } catch (err) {
+      return { content: [{ type: 'text', text: `Erro: ${err.message}` }], isError: true }
+    }
+  }
+)
+
+// Tool: Comentar em post
+server.tool(
+  'linkedin_comment_post',
+  'Adiciona um comentário em um post do LinkedIn. Use o Post ID retornado ao criar o post.',
+  {
+    post_id: z
+      .string()
+      .min(1)
+      .describe('Post ID/URN do post (ex: urn:li:share:123456)'),
+    text: z.string().min(1).max(1250).describe('Texto do comentário (max 1250 caracteres)'),
+  },
+  async ({ post_id, text }) => {
+    try {
+      const { urn } = loadCredentials()
+      const escaped = escapeLinkedInText(text)
+
+      const result = await linkedinFetch('/rest/socialActions/' + encodeURIComponent(post_id) + '/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+          actor: `urn:li:person:${urn}`,
+          message: { text: escaped },
+        }),
+      })
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Comentário adicionado!\nPost ID: ${post_id}\n\nComentário:\n${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`,
           },
         ],
       }
