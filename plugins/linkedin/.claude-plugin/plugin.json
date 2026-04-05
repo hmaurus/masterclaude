@@ -1,0 +1,20 @@
+{
+  "name": "linkedin",
+  "version": "1.0.0",
+  "description": "Plugin LinkedIn — postar texto, imagens e links no LinkedIn via Claude Code. Inclui MCP server com OAuth 2.0",
+  "author": {
+    "name": "Maurus Henriques",
+    "email": "maurus@maurus.com.br",
+    "url": "https://github.com/hmaurus"
+  },
+  "homepage": "https://github.com/hmaurus/masterclaude",
+  "repository": "https://github.com/hmaurus/masterclaude",
+  "license": "MIT",
+  "keywords": ["linkedin", "social-media", "mcp", "posts", "image-upload"],
+  "mcpServers": {
+    "linkedin": {
+      "command": "bash",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/run-server.sh"]
+    }
+  }
+}

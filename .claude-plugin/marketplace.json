@@ -1,7 +1,7 @@
 {
   "name": "masterclaude",
   "metadata": {
-    "version": "1.0.13"
+    "version": "1.0.14"
   },
   "owner": {
     "name": "Maurus Henriques",
@@ -20,6 +20,11 @@
       "name": "image-tools",
       "source": "./plugins/image-tools",
       "description": "Ferramentas de manipulação de imagens — remoção de background com rembg"
+    },
+    {
+      "name": "linkedin",
+      "source": "./plugins/linkedin",
+      "description": "Plugin LinkedIn — postar texto, imagens e links no LinkedIn via MCP server"
     }
   ]
 }
