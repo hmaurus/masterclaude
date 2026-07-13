@@ -30,7 +30,6 @@ Comandos composáveis para o **Método JIT** — desenvolvimento estruturado com
 |---------|-----------|
 | `/pdir-criar-spec` | spec via entrevista em profundidade |
 | `/pdir-validar-implementacao` | valida + documenta + atualiza PRD |
-| `/pdir-commit` | commit + push |
 | `/pdir-criar-pr` | cria PR com validação antes |
 | `/pdir-merge-pr` | squash merge + limpeza |
 | `/pdir-deploy` | merge para produção |

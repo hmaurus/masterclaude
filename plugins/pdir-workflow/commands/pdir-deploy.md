@@ -26,7 +26,7 @@ git status -sb
 git branch --show-current
 ```
 
-- Se houver mudanças pendentes: informar e perguntar se deve commitar antes (sugerir `/pdir-commit`)
+- Se houver mudanças pendentes: informar e perguntar se deve commitar antes
 - Se não estiver na branch de trabalho: informar e perguntar como prosseguir
 
 ### 3. Sincronizar
@@ -69,5 +69,5 @@ Branch atual: [branch-trabalho]
 Deploy: [método — ex: CI/CD automático, gh workflow run, etc.]
 
 Próximos passos:
-- /pdir-commit (continuar trabalhando)
+- commit (continuar trabalhando)
 ```

@@ -7,7 +7,7 @@ argument-hint: [número-da-issue]
 
 Cria Pull Request vinculado a uma Issue.
 
-**Pré-requisitos:** estar em branch de feature (não main), commits já realizados (`/pdir-commit`).
+**Pré-requisitos:** estar em branch de feature (não main), commits já realizados.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
@@ -39,7 +39,7 @@ git status -sb
 ```
 
 Se estiver na main: informar erro e encerrar.
-Se houver mudanças não commitadas: informar e sugerir `/pdir-commit` primeiro.
+Se houver mudanças não commitadas: informar e sugerir commitar primeiro (basta pedir "commit").
 
 ### 2. Push (se necessário)
 
@@ -109,5 +109,5 @@ Link: [url]
 
 Próximos passos:
 - /pdir-merge-pr (quando aprovado)
-- /pdir-commit (se continuar desenvolvendo)
+- commit (se continuar desenvolvendo, é só pedir)
 ```

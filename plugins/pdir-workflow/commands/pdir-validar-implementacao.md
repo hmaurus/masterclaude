@@ -128,6 +128,6 @@ PRD: [item X marcado como concluído | sem alterações | não encontrado]
 Spec: [renomeada para *_concluida.md | N/A]
 
 Próximos passos:
-- /pdir-commit
+- commit (linguagem natural)
 - /pdir-criar-pr
 ```
