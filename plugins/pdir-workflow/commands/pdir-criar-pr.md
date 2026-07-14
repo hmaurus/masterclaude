@@ -1,109 +1,82 @@
 ---
-description: Cria Pull Request vinculado a uma Issue do GitHub. Extrai Issue da branch automaticamente ou recebe número explícito
+description: Cria Pull Request vinculado a uma Issue do GitHub. Extrai a Issue da branch automaticamente ou recebe o número explícito
 argument-hint: [número-da-issue]
 ---
 
 # PDIR: Criar PR
 
-Cria Pull Request vinculado a uma Issue.
+Cria um Pull Request vinculado a uma Issue, validando antes e padronizando o corpo.
 
-**Pré-requisitos:** estar em branch de feature (não main), commits já realizados.
+**Pré-requisitos:** estar numa branch de feature (não no branch default) com os commits já feitos.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
-## Processar $ARGUMENTS
+## Descobrir a Issue
 
-**Fluxo principal (sem argumento):** extrair número da Issue do nome da branch atual. O formato esperado é `tipo/numero-slug` (ex: `feat/42-login` → Issue `#42`). Extrair o primeiro número encontrado após a `/`.
+- **Com argumento** (`$ARGUMENTS`, ex: `42` ou `#42`): use os dígitos (descarte o `#`).
+- **Sem argumento:** pegue o trecho entre a primeira `/` e o próximo `-` (ou o fim do nome, se não houver `-`). Use como número da Issue **somente se esse trecho for inteiramente dígitos**.
+  - `feat/42-login` → trecho `42` → `#42` ✓
+  - `feat/42` → trecho `42` → `#42` ✓
+  - `feat/login-oauth2` → trecho `login` → pergunta
+  - `feat/2fa-login` → trecho `2fa` → pergunta (não é só dígito)
 
-**Fluxo alternativo (com argumento):** usar número da Issue de `$ARGUMENTS` (ex: `42` ou `#42`).
-
-Se não conseguir extrair de nenhuma forma, perguntar ao usuário.
-
-## Formato
-
-```bash
-# Fluxo principal: extrai Issue da branch automaticamente
-/pdir-criar-pr
-
-# Alternativo: número explícito
-/pdir-criar-pr 42
-```
+**Não adivinhe.** Se o trecho não for inteiramente numérico, **não** pesque um dígito de dentro do slug — pergunte ao usuário qual é a Issue. Um número errado aqui vira `Closes #N` e fecha a Issue errada no merge.
 
 ## Instruções
 
-### 1. Verificar Estado
+### 1. Verificar estado
 
-```bash
-git branch --show-current
-git status -sb
-```
+Descubra o branch default do repositório com `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` (não assuma `main` — pode ser `master`/`develop`); reuse esse valor nos passos seguintes.
 
-Se estiver na main: informar erro e encerrar.
-Se houver mudanças não commitadas: informar e sugerir commitar primeiro (basta pedir "commit").
+Confirme, via git, que você **não** está no branch default e que não há mudanças não commitadas. Se estiver no default, encerre informando o motivo. Se houver pendências não commitadas, avise e sugira commitar primeiro (é só pedir "commit").
 
-### 2. Push (se necessário)
+### 2. Validar
 
-```bash
-git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null
-```
+Rode os checks do projeto (lint, type-check, testes) — consulte `package.json`, `Makefile` ou equivalente para os comandos disponíveis. Se algum falhar, informe e pergunte se o usuário quer corrigir antes ou seguir mesmo assim. Validar **antes** do push evita disparar CI em código sabidamente quebrado.
 
-Se não tem upstream:
+### 3. Publicar a branch
 
-```bash
-git push -u origin "$(git branch --show-current)"
-```
+Faça push da branch para o `origin`. Se ela ainda não tiver upstream, configure-o no push (`-u`); se já tiver, envie só os commits pendentes.
 
-Se tem upstream mas há commits locais não enviados (`git log @{u}..HEAD --oneline`), fazer `git push`.
+### 4. Confirmar a Issue e revisar o que mudou
 
-### 3. Validar Antes de Criar PR
+- Leia a Issue (`gh issue view <número>`) e **mostre o título** — é a checagem de que você linkou a Issue certa. Se ela não existir, informe o número tentado e peça o correto. Se o número foi extraído da branch e o título não tiver relação com o trabalho da branch, confirme com o usuário antes de seguir.
+- Reúna o contexto para o corpo do PR: os commits da branch (`git log <default>..HEAD --oneline`) e o resumo de arquivos **que o PR vai exibir**. Para o diff, use **três pontos** — `git diff <default>...HEAD --stat` —, que compara a partir do ponto de bifurcação (o que aparece na aba "Files changed"). Não use `git diff <default>` nem dois pontos: contra o tip atual do default, o resumo mistura mudanças que não são desta branch quando o default avançou.
 
-Executar os checks do projeto (lint, type-check, testes). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
+### 5. Criar o PR
 
-Se algum check falhar, informar ao usuário e perguntar se deseja corrigir antes de criar o PR ou prosseguir mesmo assim.
+Antes de criar, cheque se já existe um PR aberto para essa branch. Se existir, mostre o link e pare — não abra outro.
 
-### 4. Buscar Issue e Analisar Branch
+Caso contrário, crie o PR contra o branch default. Derive:
 
-```bash
-gh issue view [número] --json number,title,body
-DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
-git log "$DEFAULT_BRANCH"..HEAD --oneline
-git diff "$DEFAULT_BRANCH" --stat
-```
+- **título** no formato `tipo(escopo): descrição` — `tipo` do prefixo da branch, `escopo` da área principal dos arquivos modificados, descrição a partir da Issue;
+- **corpo** exatamente com esta estrutura:
 
-Se a Issue não existir: informar erro com o número tentado e perguntar ao usuário o número correto.
-
-Derivar `type` do prefixo da branch (ex: `feat/` → `feat`, `fix/` → `fix`). Derivar `scope` do título da Issue ou da área principal dos arquivos modificados. Derivar título e resumo a partir da Issue e dos commits.
-
-### 5. Criar Pull Request
-
-```bash
-DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
-gh pr create \
-  --base "$DEFAULT_BRANCH" \
-  --title "type(scope): descrição derivada da Issue" \
-  --body "$(cat <<'EOF'
-Closes #[número-da-issue]
+```markdown
+Closes #<número-da-issue>
 
 ## Resumo
 
-[Breve resumo derivado da Issue e dos commits]
+<resumo derivado da Issue e dos commits>
 
 ## Mudanças Principais
 
-- [Mudança 1]
-- [Mudança 2]
-EOF
-)"
+- <mudança 1>
+- <mudança 2>
 ```
 
-### 6. Feedback Final
+O `Closes #<número>` é obrigatório — é ele que amarra o PR à Issue e a fecha automaticamente no merge.
+
+### 6. Feedback final
+
+Informe ao usuário:
 
 ```
 PR criado!
 
-PR: #[número-do-pr]
-Branch: [branch]
-Link: [url]
+PR: #<número-do-pr>
+Branch: <branch>
+Link: <url>
 
 Próximos passos:
 - /pdir-merge-pr (quando aprovado)
