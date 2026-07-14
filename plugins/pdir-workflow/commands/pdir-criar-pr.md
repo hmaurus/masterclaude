@@ -92,8 +92,6 @@ Closes #[número-da-issue]
 
 - [Mudança 1]
 - [Mudança 2]
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```
