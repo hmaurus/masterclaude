@@ -5,52 +5,61 @@ argument-hint: [numero-do-pr]
 
 # PDIR: Merge PR
 
-Valida, faz merge do PR e limpa branch local/remota.
+Valida, faz o squash merge do PR e limpa a branch local/remota.
+
+**Pré-requisito:** PR aprovado e pronto para merge.
 
 **Em qualquer passo, se algo falhar ou faltar informação, informe o erro e pergunte ao usuário como prosseguir.**
 
-## Processar $ARGUMENTS
+## Descobrir o PR
 
-`$ARGUMENTS` (opcional): número do PR. Se não fornecido, usa PR da branch atual.
+- **Com argumento** (`$ARGUMENTS`): número do PR (descarte o `#` se vier).
+- **Sem argumento:** use o PR aberto da branch atual.
+
+Leia o PR com `gh pr view <número> --json number,title,state,isDraft,headRefName` e **mostre número + título** — é a conferência de que você vai mergear o PR certo. Um squash merge com `--delete-branch` é irreversível na prática (some com a branch). Se o PR não estiver aberto (já mergeado/fechado) ou for draft, **pare e avise** — não faça merge.
 
 ## Instruções
 
-### 1. Validação Local
+### 1. Validar localmente
 
-Executar os checks do projeto (lint, type-check, build). Consultar `package.json`, `Makefile` ou equivalente para os comandos disponíveis.
+Rode os checks do projeto (lint, type-check, build) — consulte `package.json`, `Makefile` ou equivalente para os comandos disponíveis. Se algum falhar, pare e informe ao usuário.
 
-Se algum check falhar, parar e informar ao usuário.
+### 2. Verificar o CI do PR
 
-### 2. Verificar CI
+Cheque o status dos checks de CI do PR (`gh pr checks <número>`). Se houver algo falhando, pare e pergunte se o usuário quer aguardar, seguir mesmo assim, ou abortar.
+
+### 3. Fazer o merge
+
+Guarde o nome da branch de origem do PR — o `headRefName` que você leu ao descobrir o PR. Precisa dele para a limpeza, e a branch pode sumir logo em seguida.
+
+Faça o squash merge deletando a branch:
 
 ```bash
-gh pr checks $ARGUMENTS
+gh pr merge <número> --squash --delete-branch
 ```
 
-Se houver checks falhando, parar e perguntar ao usuário se deseja aguardar, prosseguir mesmo assim, ou abortar.
+O `--squash` (convenção do PDIR: um commit por PR) e o `--delete-branch` (remove a branch remota — e a local, se você estiver nela) são intencionais — mantenha ambos.
 
-### 3. Fazer Merge
+### 4. Sincronizar o local
 
-```bash
-gh pr merge $ARGUMENTS --squash --delete-branch
-```
-
-### 4. Sincronizar Local
+Volte para o branch default e atualize-o:
 
 ```bash
-FEATURE_BRANCH=$(git branch --show-current)
 DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
 git checkout "$DEFAULT_BRANCH"
 git pull origin "$DEFAULT_BRANCH"
-git branch -d "$FEATURE_BRANCH"
 ```
 
-### 5. Feedback Final
+O passo anterior já removeu a branch de origem remota (e a local, se você estava nela). Se a branch local ainda existir, remova-a com `git branch -d <headRefName>`. O `-d` recusa apagar trabalho não mergeado — se ele reclamar, **não** force com `-D`: investigue por que a branch parece não mergeada.
+
+### 5. Feedback final
+
+Informe ao usuário:
 
 ```
 Merge realizado!
 
-PR: #[número] → [branch-default] (squash merge)
+PR: #<número> → <branch-default> (squash merge)
 Branch deletada (local + remota)
 
 Próximos passos:
